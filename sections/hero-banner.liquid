@@ -1,0 +1,256 @@
+{% liquid
+  assign has_image = false
+  assign has_video = false
+  
+  if section.settings.background_type == 'image' and section.settings.background_image != blank
+    assign has_image = true
+  endif
+  
+  if section.settings.background_type == 'video' and section.settings.background_video != blank
+    assign has_video = true
+  endif
+%}
+
+<div class="hero-banner" data-section-id="{{ section.id }}" style="{% if has_image %}background-image: url('{{ section.settings.background_image | image_url: width: 2000 }}');{% endif %}">
+  {% if has_video %}
+    <div class="hero-banner__video">
+      {{ section.settings.background_video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, image_size: '2000x' }}
+    </div>
+  {% endif %}
+  
+  <div class="hero-banner__overlay" style="background-color: {{ section.settings.overlay_color }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; {{ section.settings.overlay_custom_css }}"></div>
+  
+  <div class="hero-banner__content">
+    <h1 class="hero-banner__heading">{{ section.settings.heading }}</h1>
+    <div class="hero-banner__divider" style="{% if section.settings.divider_color != blank %}background: {{ section.settings.divider_color }};{% endif %}"></div>
+    <p class="hero-banner__subheading">{{ section.settings.subheading }}</p>
+    {% if section.settings.button_text != blank %}
+      <a href="{{ section.settings.button_link }}" class="hero-banner__btn">{{ section.settings.button_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .hero-banner {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+  }
+  
+  .hero-banner__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  
+  .hero-banner__video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .hero-banner__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  .hero-banner__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+  }
+  
+  .hero-banner__heading {
+    font-family: var(--font-helvetica-world);
+    font-size: 80px;
+    color: var(--color-title-white);
+    text-transform: uppercase;
+    letter-spacing: -4px;
+    line-height: 1.05;
+    margin-bottom: 0;
+    letter-spacing: 2px;
+    white-space: pre-line;
+  }
+  
+  .hero-banner__divider {
+    width: 1px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.6);
+    margin: 40px auto;
+  }
+  
+  .hero-banner__subheading {
+    font-family: var(--font-helvetica-world);
+    font-size: 16px;
+    color: var(--color-paragraph-white);
+    margin-bottom: 30px;
+    opacity: 0.9;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+  
+  .hero-banner__btn {
+    display: inline-block;
+    padding: 18px 45px;
+    border-radius: 1000px;
+    font-family: var(--font-helvetica-world);
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #fff;
+    color: #1a1a1a;
+    transition: all 0.3s ease;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .hero-banner__btn:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+  }
+  
+  @media (max-width: 768px) {
+    .hero-banner {
+      min-height: 500px;
+    }
+    
+    .hero-banner__heading {
+      font-size: 48px;
+    }
+    
+    .hero-banner__divider {
+      height: 70px;
+      margin: 30px auto;
+    }
+    
+    .hero-banner__subheading {
+      font-size: 14px;
+    }
+    
+    .hero-banner__btn {
+      padding: 15px 35px;
+      font-size: 12px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-banner__heading {
+      font-size: 36px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "video",
+      "id": "background_video",
+      "label": "Background video"
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20,
+      "unit": "%"
+    },
+    {
+      "type": "textarea",
+      "id": "overlay_custom_css",
+      "label": "Overlay CSS personalizado",
+      "info": "Escribe estilos CSS adicionales para el overlay. Ejemplo: background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "THE SANCTUARY\nFOR YOUR SOUL"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "rgba(255, 255, 255, 0.6)"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [{ "name": "Hero Banner" }]
+}
+{% endschema %}

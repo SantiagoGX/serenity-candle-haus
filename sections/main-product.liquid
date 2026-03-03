@@ -1,0 +1,797 @@
+{% assign total_images = product.images.size %}
+
+<section class="product-section" data-section-id="{{ section.id }}">
+  <div class="product__layout">
+    {% comment %} Gallery - 60% touches left edge {% endcomment %}
+    <div class="product__gallery">
+      {% if total_images > 0 %}
+        <div class="product__gallery-inner">
+          {% assign pattern_counter = 0 %}
+          
+          {% for image in product.images %}
+            {% assign pattern_mod = pattern_counter | modulo: 3 %}
+            
+            {% if pattern_mod == 0 %}
+              {% comment %} Start group of 2 {% endcomment %}
+              <div class="product__gallery-row product__gallery-row--double">
+            {% endif %}
+            
+            {% if pattern_mod == 0 or pattern_mod == 1 %}
+              {% comment %} 2 images side by side {% endcomment %}
+              <div class="product__gallery-item product__gallery-item--half">
+                {{ image | image_url: width: 800 | image_tag: 
+                  loading: 'lazy',
+                  alt: product.title,
+                  class: 'product__gallery-image'
+                }}
+              </div>
+              
+              {% if forloop.last %}
+                </div>
+              {% elsif pattern_mod == 1 %}
+                </div>
+              {% endif %}
+              
+            {% else %}
+              {% comment %} Single full-width image {% endcomment %}
+              <div class="product__gallery-row product__gallery-row--single">
+                <div class="product__gallery-item product__gallery-item--full">
+                  {{ image | image_url: width: 1200 | image_tag: 
+                    loading: 'lazy',
+                    alt: product.title,
+                    class: 'product__gallery-image'
+                  }}
+                </div>
+              </div>
+            {% endif %}
+            
+            {% assign pattern_counter = pattern_counter | plus: 1 %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="product__gallery-placeholder"></div>
+      {% endif %}
+    </div>
+    
+    {% comment %} Product Info - 40% sticky {% endcomment %}
+    <div class="product__info-outer">
+      <div class="product__info-inner">
+        <div class="product__info">
+          {% if section.settings.show_subtitle %}
+            <span class="product__subtitle">{{ section.settings.subtitle | default: "More than a Scent. It's a Ritual." }}</span>
+          {% endif %}
+          
+          <h1 class="product__title">{{ product.title }}</h1>
+          
+          <div class="product__price">{{ product.price | money }}</div>
+          
+          {% if section.settings.show_delivery_date %}
+            <div class="product__delivery" 
+                 data-delivery-date 
+                 data-min-days="{{ section.settings.delivery_min_days | default: 3 }}"
+                 data-max-days="{{ section.settings.delivery_max_days | default: 7 }}">
+              {{ section.settings.delivery_text | default: 'Recibe entre' }} <span class="delivery-date-range">...</span>
+            </div>
+          {% endif %}
+          
+          {% if product.description != blank %}
+            <div class="product__description">
+              {{ product.description }}
+            </div>
+          {% endif %}
+          
+          {% form 'product', product, id: 'product-form', class: 'product__form' %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id>
+            
+            <div class="product__actions">
+              <button type="submit" class="product__btn product__btn--primary" name="checkout" data-checkout-btn>
+                {{ section.settings.shop_now_text | default: 'SHOP NOW' }}
+              </button>
+              
+              <button type="button" class="product__btn product__btn--secondary" data-add-to-cart-btn>
+                {{ section.settings.add_to_cart_text | default: 'ADD TO CART' }}
+              </button>
+            </div>
+          {% endform %}
+          
+          {% if section.settings.show_accordions %}
+            <div class="product__accordions">
+              {% if section.settings.details_title != blank %}
+                <details class="product__accordion">
+                  <summary class="product__accordion-header">
+                    <span>{{ section.settings.details_title }}</span>
+                    <span class="product__accordion-icon">+</span>
+                  </summary>
+                  <div class="product__accordion-content">
+                    {{ section.settings.details_content | default: product.description }}
+                  </div>
+                </details>
+              {% endif %}
+              
+              {% if section.settings.ingredients_title != blank %}
+                <details class="product__accordion">
+                  <summary class="product__accordion-header">
+                    <span>{{ section.settings.ingredients_title }}</span>
+                    <span class="product__accordion-icon">+</span>
+                  </summary>
+                  <div class="product__accordion-content">
+                    {{ section.settings.ingredients_content }}
+                  </div>
+                </details>
+              {% endif %}
+            </div>
+          {% endif %}
+          
+          {% comment %} Bundles - Cross sell {% endcomment %}
+          {% assign bundle_blocks = section.blocks | where: 'type', 'bundle' %}
+          {% if bundle_blocks.size > 0 %}
+            <div class="product__bundles">
+              {% for block in bundle_blocks %}
+                <div class="product__bundle" {{ block.shopify_attributes }}>
+                  <div class="product__bundle-image">
+                    {% if block.settings.image != blank %}
+                      {{ block.settings.image | image_url: width: 200 | image_tag: alt: block.settings.title, loading: 'lazy' }}
+                    {% elsif block.settings.product.featured_image != blank %}
+                      {{ block.settings.product.featured_image | image_url: width: 200 | image_tag: alt: block.settings.product.title, loading: 'lazy' }}
+                    {% else %}
+                      <div class="product__bundle-placeholder"></div>
+                    {% endif %}
+                  </div>
+                  <div class="product__bundle-info">
+                    <h4 class="product__bundle-title">{{ block.settings.title }}</h4>
+                    <div class="product__bundle-prices">
+                      {% if block.settings.compare_price != blank %}
+                        <span class="product__bundle-compare">${{ block.settings.compare_price }}</span>
+                      {% endif %}
+                      <span class="product__bundle-price">${{ block.settings.price }}</span>
+                    </div>
+                  </div>
+                  <button class="product__bundle-add" data-bundle-add data-variant-id="{{ block.settings.product.selected_or_first_available_variant.id }}" aria-label="Add bundle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                  </button>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .product-section {
+    padding: 40px 0 100px;
+    background: #FDFBF5;
+  }
+
+  .product__layout {
+    display: grid;
+    grid-template-columns: 60% 40%;
+  }
+
+  @media (min-width: 1400px) {
+    .product__layout {
+      grid-template-columns: 1.5fr 1fr;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .product__layout {
+      grid-template-columns: 1fr;
+      padding: 0 24px;
+    }
+  }
+
+  /* Gallery - 60% touches left edge */
+  .product__gallery {
+    position: relative;
+  }
+
+  .product__gallery-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-right: 40px;
+  }
+
+  @media (max-width: 900px) {
+    .product__gallery-inner {
+      padding-right: 0;
+    }
+  }
+
+  .product__gallery-row {
+    display: grid;
+    gap: 5px;
+  }
+
+  .product__gallery-row--double {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .product__gallery-row--single {
+    grid-template-columns: 1fr;
+  }
+
+  .product__gallery-item {
+    overflow: hidden;
+  }
+
+  .product__gallery-item--half {
+    aspect-ratio: 4 / 5;
+  }
+
+  .product__gallery-item--full {
+    aspect-ratio: 16 / 9;
+  }
+
+  .product__gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .product__gallery-placeholder {
+    aspect-ratio: 4 / 5;
+    background: linear-gradient(135deg, #e8e4d9 0%, #d4d0c5 100%);
+  }
+
+  /* If odd number ends a double row, expand to full width */
+  .product__gallery-row--double:has(> :only-child) .product__gallery-item--half {
+    grid-column: span 2;
+  }
+
+  /* Info - 40% sticky */
+  .product__info-outer {
+    position: relative;
+  }
+
+  .product__info-inner {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    padding-left: 40px;
+    padding-right: 24px;
+  }
+
+  @media (min-width: 1400px) {
+    .product__info-inner {
+      max-width: 560px;
+      margin-left: 0;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .product__info-inner {
+      position: static;
+      padding-left: 0;
+      padding-right: 0;
+      margin-top: 40px;
+    }
+  }
+
+  .product__info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 40px;
+  }
+
+  @media (max-width: 900px) {
+    .product__info {
+      padding-top: 0;
+    }
+  }
+
+  .product__subtitle {
+    font-family: var(--font-helixa);
+    font-size: 14px;
+    color: var(--color-paragraph-dark, #6D6C6C);
+    font-style: italic;
+  }
+
+  .product__title {
+    font-family: var(--font-helvetica-world);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    color: var(--color-title-dark, #6B550E);
+    text-transform: uppercase;
+    letter-spacing: -4px;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .product__price {
+    font-family: var(--font-helixa);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-title-dark, #6B550E);
+  }
+
+  .product__delivery {
+    font-family: var(--font-helixa);
+    font-size: 13px;
+    color: var(--color-paragraph-dark, #6D6C6C);
+    padding: 8px 0;
+  }
+
+  .delivery-date-range {
+    font-weight: 500;
+  }
+
+  .product__description {
+    font-family: var(--font-helixa);
+    font-size: 14px;
+    color: var(--color-paragraph-dark, #6D6C6C);
+    line-height: 1.7;
+  }
+
+  .product__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .product__btn {
+    padding: 16px 32px;
+    border: none;
+    border-radius: 1000px;
+    font-family: var(--font-helvetica-world);
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .product__btn--primary {
+    background: var(--color-title-dark, #6B550E);
+    color: #fff;
+  }
+
+  .product__btn--primary:hover {
+    background: #5a480c;
+    transform: translateY(-2px);
+  }
+
+  .product__btn--secondary {
+    background: rgba(107, 85, 14, 0.1);
+    color: var(--color-title-dark, #6B550E);
+  }
+
+  .product__btn--secondary:hover {
+    background: rgba(107, 85, 14, 0.2);
+  }
+
+  /* Accordions */
+  .product__accordions {
+    margin-top: 24px;
+    border-top: 1px solid rgba(107, 85, 14, 0.15);
+  }
+
+  .product__accordion {
+    border-bottom: 1px solid rgba(107, 85, 14, 0.15);
+  }
+
+  .product__accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    font-family: var(--font-helvetica-world);
+    font-size: 13px;
+    color: var(--color-title-dark, #6B550E);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .product__accordion-header::-webkit-details-marker {
+    display: none;
+  }
+
+  .product__accordion-icon {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .product__accordion[open] .product__accordion-icon {
+    transform: rotate(45deg);
+  }
+
+  .delivery-date-range {
+    font-weight: 500;
+  }
+
+  .product__accordion-content {
+    padding: 0 0 16px;
+    font-family: var(--font-helvetica-world);
+    font-size: 13px;
+    color: var(--color-paragraph-dark, #6D6C6C);
+    line-height: 1.6;
+  }
+
+  /* Bundles */
+  .product__bundles {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .product__bundle {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 4px;
+  }
+
+  .product__bundle-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .product__bundle-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product__bundle-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e8e4d9 0%, #d4d0c5 100%);
+  }
+
+  .product__bundle-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .product__bundle-title {
+    font-family: var(--font-helvetica-world);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-title-dark, #6B550E);
+    margin: 0;
+    line-height: 1.4;
+    text-transform: normal;
+    letter-spacing: normal !important;
+  }
+
+  .product__bundle-prices {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .product__bundle-compare {
+    font-family: var(--font-helvetica-world);
+    font-size: 13px;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  .product__bundle-price {
+    font-family: var(--font-helvetica-world);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-title-dark, #6B550E);
+  }
+
+  .product__bundle-add {
+    width: 36px;
+    height: 36px;
+    background: rgba(107, 85, 14, 0.08);
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-title-dark, #6B550E);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .product__bundle-add:hover {
+    background: var(--color-title-dark, #6B550E);
+    color: #fff;
+  }
+</style>
+
+<script>
+  (function() {
+    // Calculate dynamic delivery dates
+    const deliveryContainer = document.querySelector('[data-delivery-date]');
+    if (deliveryContainer) {
+      const deliveryDateEl = deliveryContainer.querySelector('.delivery-date-range');
+      const minDays = parseInt(deliveryContainer.dataset.minDays) || 3;
+      const maxDays = parseInt(deliveryContainer.dataset.maxDays) || 7;
+      
+      const today = new Date();
+      
+      const minDate = new Date(today);
+      minDate.setDate(today.getDate() + minDays);
+      
+      const maxDate = new Date(today);
+      maxDate.setDate(today.getDate() + maxDays);
+      
+      // Format dates (e.g., "Nov 20 - Nov 25")
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      const minMonth = monthNames[minDate.getMonth()];
+      const minDay = minDate.getDate();
+      
+      const maxMonth = monthNames[maxDate.getMonth()];
+      const maxDay = maxDate.getDate();
+      
+      let dateRange;
+      if (minMonth === maxMonth) {
+        dateRange = `${minMonth} ${minDay} - ${maxDay}`;
+      } else {
+        dateRange = `${minMonth} ${minDay} - ${maxMonth} ${maxDay}`;
+      }
+      
+      deliveryDateEl.textContent = dateRange;
+    }
+    
+    // AJAX Add to Cart
+    const addToCartBtn = document.querySelector('[data-add-to-cart-btn]');
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const variantId = document.querySelector('[data-variant-id]').value;
+        const quantity = 1;
+        const originalText = addToCartBtn.textContent;
+        
+        addToCartBtn.disabled = true;
+        addToCartBtn.textContent = 'ADDING...';
+        
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            items: [{
+              id: variantId,
+              quantity: quantity
+            }]
+          })
+        })
+        .then(function(response) {
+          if (!response.ok) throw new Error('Error adding to cart');
+          return response.json();
+        })
+        .then(function() {
+          // Update cart count in header
+          return fetch('/cart.js');
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(cart) {
+          const cartCount = document.querySelector('[data-cart-count]');
+          if (cartCount) {
+            cartCount.textContent = cart.item_count;
+            cartCount.style.display = cart.item_count > 0 ? 'flex' : 'none';
+          }
+          
+          addToCartBtn.textContent = 'ADDED!';
+          setTimeout(function() {
+            addToCartBtn.textContent = originalText;
+            addToCartBtn.disabled = false;
+          }, 2000);
+        })
+        .catch(function(error) {
+          console.error('Error:', error);
+          addToCartBtn.textContent = 'ERROR';
+          setTimeout(function() {
+            addToCartBtn.textContent = originalText;
+            addToCartBtn.disabled = false;
+          }, 2000);
+        });
+      });
+    }
+    
+    // Bundle Add to Cart
+    const bundleBtns = document.querySelectorAll('[data-bundle-add]');
+    bundleBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const variantId = btn.dataset.variantId;
+        if (!variantId) return;
+        
+        const originalContent = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+        
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            items: [{
+              id: variantId,
+              quantity: 1
+            }]
+          })
+        })
+        .then(function(response) { return response.json(); })
+        .then(function() {
+          return fetch('/cart.js');
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(cart) {
+          const cartCount = document.querySelector('[data-cart-count]');
+          if (cartCount) {
+            cartCount.textContent = cart.item_count;
+            cartCount.style.display = cart.item_count > 0 ? 'flex' : 'none';
+          }
+          
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+          setTimeout(function() {
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+          }, 2000);
+        })
+        .catch(function(error) {
+          console.error('Error adding bundle:', error);
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+        });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Main Product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subtitle",
+      "label": "Show subtitle",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "More than a Scent. It's a Ritual."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_delivery_date",
+      "label": "Show delivery date",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "delivery_min_days",
+      "label": "Minimum delivery days",
+      "min": 1,
+      "max": 14,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "delivery_max_days",
+      "label": "Maximum delivery days",
+      "min": 2,
+      "max": 21,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "type": "text",
+      "id": "delivery_text",
+      "label": "Delivery text prefix",
+      "default": "Recibe entre"
+    },
+    {
+      "type": "text",
+      "id": "shop_now_text",
+      "label": "Shop now button text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to cart button text",
+      "default": "ADD TO CART"
+    },
+    {
+      "type": "header",
+      "content": "Accordions"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accordions",
+      "label": "Show accordions",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "details_title",
+      "label": "Details accordion title",
+      "default": "Details"
+    },
+    {
+      "type": "richtext",
+      "id": "details_content",
+      "label": "Details content"
+    },
+    {
+      "type": "text",
+      "id": "ingredients_title",
+      "label": "Ingredients accordion title",
+      "default": "Ingredients"
+    },
+    {
+      "type": "richtext",
+      "id": "ingredients_content",
+      "label": "Ingredients content"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bundle",
+      "name": "Bundle",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Bundle image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Bundle title",
+          "default": "Save 20% with the Serenity and Mediterranean bundle"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Bundle product"
+        },
+        {
+          "type": "text",
+          "id": "variant_id",
+          "label": "Variant ID (optional)"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Bundle price",
+          "default": "35.00"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Compare at price",
+          "default": "45.00"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

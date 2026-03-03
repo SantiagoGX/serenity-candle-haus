@@ -1,0 +1,30 @@
+{% comment %} Open Graph / Social Meta Tags {% endcomment %}
+<meta property="og:site_name" content="{{ shop.name }}">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:title" content="{{ page_title | escape }}">
+<meta property="og:type" content="{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}">
+<meta property="og:description" content="{{ page_description | escape }}">
+
+{%- if template == 'product' -%}
+  <meta property="og:price:amount" content="{{ product.selected_or_first_available_variant.price | money_without_currency }}">
+  <meta property="og:price:currency" content="{{ shop.currency }}">
+  <meta property="og:availability" content="{% if product.available %}instock{% else %}outofstock{% endif %}">
+  {%- if product.featured_image -%}
+    <meta property="og:image" content="http:{{ product.featured_image | image_url: width: 1200 }}">
+    <meta property="og:image:secure_url" content="https:{{ product.featured_image | image_url: width: 1200 }}">
+  {%- endif -%}
+{%- elsif template == 'article' -%}
+  {%- if article.image -%}
+    <meta property="og:image" content="http:{{ article.image | image_url: width: 1200 }}">
+    <meta property="og:image:secure_url" content="https:{{ article.image | image_url: width: 1200 }}">
+  {%- endif -%}
+{%- elsif template == 'collection' -%}
+  {%- if collection.image -%}
+    <meta property="og:image" content="http:{{ collection.image | image_url: width: 1200 }}">
+    <meta property="og:image:secure_url" content="https:{{ collection.image | image_url: width: 1200 }}">
+  {%- endif -%}
+{%- endif -%}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page_title | escape }}">
+<meta name="twitter:description" content="{{ page_description | escape }}">

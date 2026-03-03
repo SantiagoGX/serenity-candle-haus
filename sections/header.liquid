@@ -1,0 +1,695 @@
+{% liquid
+  assign is_home = false
+  assign is_contact = false
+  if template == 'index'
+    assign is_home = true
+  elsif template == 'page.contact'
+    assign is_contact = true
+  endif
+%}
+
+<header class="header{% if is_home or is_contact %} header--transparent{% endif %}" data-section-id="{{ section.id }}">
+  <div class="header__container page-width">
+    <div class="header__left">
+      <button class="header__menu-btn" aria-label="Menu" data-menu-trigger>
+        <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="0" y1="1" x2="20" y2="1"></line>
+          <line x1="0" y1="7" x2="20" y2="7"></line>
+          <line x1="0" y1="13" x2="20" y2="13"></line>
+        </svg>
+      </button>
+      <div class="header__lang">ES <span class="header__lang-arrow">▼</span></div>
+      {% assign submenu_collection = collections[section.settings.submenu_collection] %}
+      <div class="header__dropdown" data-dropdown-trigger>
+        <span>{{ section.settings.submenu_title | default: 'Candles' }}</span>
+        <span class="header__dropdown-arrow">▼</span>
+        
+        <div class="header__submenu" data-submenu>
+          <div class="header__submenu-inner">
+            {% if submenu_collection and submenu_collection.products.size > 0 %}
+              {% for product in submenu_collection.products limit: 6 %}
+                <a href="{{ product.url }}" class="header__submenu-item">
+                  <div class="header__submenu-image">
+                    {% if product.featured_image %}
+                      {{ product.featured_image | image_url: width: 150 | image_tag: alt: product.title, loading: 'lazy' }}
+                    {% else %}
+                      <div class="header__submenu-placeholder"></div>
+                    {% endif %}
+                  </div>
+                  <div class="header__submenu-info">
+                    <span class="header__submenu-title">{{ product.title }}</span>
+                    <span class="header__submenu-price">{{ product.price | money }}</span>
+                  </div>
+                </a>
+              {% endfor %}
+            {% else %}
+              {% for i in (1..4) %}
+                <a href="#" class="header__submenu-item">
+                  <div class="header__submenu-placeholder"></div>
+                  <div class="header__submenu-info">
+                    <span class="header__submenu-title">Product {{ i }}</span>
+                    <span class="header__submenu-price">$49.99</span>
+                  </div>
+                </a>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="header__logo">
+      <a href="{{ routes.root_url }}" class="header__logo-link">
+        {% if section.settings.logo_dark != blank %}
+          <img 
+            src="{{ section.settings.logo_dark | image_url: width: 200 }}" 
+            alt="{{ shop.name }}" 
+            class="header__logo-img header__logo--dark"
+            width="120"
+            height="auto"
+          >
+        {% else %}
+          <span class="header__logo-text">serenity</span>
+        {% endif %}
+        
+        {% if section.settings.logo_light != blank %}
+          <img 
+            src="{{ section.settings.logo_light | image_url: width: 200 }}" 
+            alt="{{ shop.name }}" 
+            class="header__logo-img header__logo--light"
+            width="120"
+            height="auto"
+          >
+        {% endif %}
+      </a>
+    </div>
+    
+    <div class="header__icons">
+      <a href="/pages/favoritos" class="header__icon-btn header__wishlist" aria-label="Wishlist">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <span class="header__wishlist-count" data-wishlist-count style="display: none;">0</span>
+      </a>
+      <a href="{{ routes.cart_url }}" class="header__icon-btn header__cart" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="header__cart-count" data-cart-count{% if cart.item_count == 0 %} style="display: none;"{% endif %}>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% comment %} Mobile/Off-canvas Menu {% endcomment %}
+<div class="mobile-menu" data-mobile-menu>
+  <div class="mobile-menu__overlay" data-menu-overlay></div>
+  <div class="mobile-menu__panel">
+    <button class="mobile-menu__close" data-menu-close aria-label="Close menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    
+    <nav class="mobile-menu__nav">
+      {% assign mobile_menu = linklists[section.settings.mobile_menu] %}
+      {% if mobile_menu != blank %}
+        {% for link in mobile_menu.links %}
+          <a href="{{ link.url }}" class="mobile-menu__link">{{ link.title }}</a>
+        {% endfor %}
+      {% else %}
+        <a href="{{ routes.collections_url }}" class="mobile-menu__link">Shop</a>
+        <a href="/pages/about" class="mobile-menu__link">About</a>
+        <a href="/pages/contact" class="mobile-menu__link">Contact</a>
+      {% endif %}
+    </nav>
+  </div>
+</div>
+
+<style>
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    transition: all 0.4s ease;
+  }
+  
+  .header--transparent {
+    background: transparent;
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .header--transparent .header__logo-text,
+  .header--transparent .header__lang,
+  .header--transparent .header__dropdown,
+  .header--transparent .header__icon-btn {
+    color: #fff;
+  }
+  
+  .header--transparent .header__menu-btn {
+    color: #fff;
+  }
+  
+  .header--transparent.is-scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+  }
+  
+  .header--transparent.is-scrolled .header__logo-text,
+  .header--transparent.is-scrolled .header__lang,
+  .header--transparent.is-scrolled .header__dropdown,
+  .header--transparent.is-scrolled .header__icon-btn,
+  .header--transparent.is-scrolled .header__menu-btn {
+    color: var(--color-title-dark, #6B550E);
+  }
+  
+  /* Logo switch on transparent header */
+  .header--transparent .header__logo--dark {
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .header--transparent .header__logo--light {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .header--transparent.is-scrolled .header__logo--dark {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .header--transparent.is-scrolled .header__logo--light {
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .header__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+  }
+  
+  .header__left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+  }
+  
+  .header__menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-title-dark);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  
+  .header__lang,
+  .header__dropdown {
+    font-family: var(--font-helvetica-world);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--color-title-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    user-select: none;
+  }
+  
+  .header__lang-arrow,
+  .header__dropdown-arrow {
+    font-size: 8px;
+    margin-top: 2px;
+    transition: transform 0.3s ease;
+  }
+
+  .header__dropdown.is-active .header__dropdown-arrow {
+    transform: rotate(180deg);
+  }
+
+  /* Submenu */
+  .header__submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding-top: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+  }
+
+  .header__dropdown.is-active .header__submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .header__submenu-inner {
+    position: relative;
+    background: rgba(20, 20, 20, 0.75);
+    border-radius: 16px;
+    padding: 20px;
+    min-width: 320px;
+    overflow: hidden;
+  }
+
+  .header__submenu-inner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-radius: 16px;
+    z-index: -1;
+  }
+
+  .header__submenu-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+
+  .header__submenu-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .header__submenu-item + .header__submenu-item {
+    margin-top: 8px;
+  }
+
+  .header__submenu-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .header__submenu-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .header__submenu-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+  }
+
+  .header__submenu-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .header__submenu-title {
+    font-family: var(--font-helvetica-world);
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  .header__submenu-price {
+    font-family: var(--font-helixa);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .header__logo {
+    flex: 0 0 auto;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .header__logo-link {
+    display: block;
+    position: relative;
+    text-decoration: none;
+  }
+  
+  .header__logo-img {
+    height: {{ section.settings.logo_height | default: 28 }}px;
+    width: auto;
+    display: block;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+  
+  .header__logo--light {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .header__logo-text {
+    font-family: var(--font-helvetica-world);
+    font-size: 24px;
+    color: var(--color-title-dark);
+    transition: color 0.4s ease;
+    letter-spacing: 1px;
+  }
+  
+  .header--transparent .header__logo-text {
+    color: #fff;
+  }
+  
+  .header--transparent.is-scrolled .header__logo-text {
+    color: var(--color-title-dark, #6B550E);
+  }
+  
+  .header__icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+  
+  .header__icon-btn {
+    position: relative;
+    color: var(--color-title-dark);
+    transition: color 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .header__cart-count,
+  .header__wishlist-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    background: var(--color-title-dark);
+    color: #fff;
+    font-family: var(--font-helvetica-world);
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Mobile Menu / Off-canvas */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.4s ease;
+  }
+
+  .mobile-menu.is-active {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .mobile-menu__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    cursor: pointer;
+  }
+
+  .mobile-menu__panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    max-width: 85vw;
+    height: 100%;
+    background: #fff;
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+    padding: 80px 32px 40px;
+  }
+
+  .mobile-menu.is-active .mobile-menu__panel {
+    transform: translateX(0);
+  }
+
+  .mobile-menu__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    color: var(--color-title-dark, #6B550E);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+  }
+
+  .mobile-menu__close:hover {
+    color: #000;
+  }
+
+  .mobile-menu__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mobile-menu__link {
+    font-family: var(--font-helvetica-world);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--color-title-dark, #6B550E);
+    text-decoration: none;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(107, 85, 14, 0.1);
+    transition: color 0.3s ease;
+  }
+
+  .mobile-menu__link:hover {
+    color: #000;
+  }
+
+  @media (max-width: 768px) {
+    .header__lang,
+    .header__dropdown {
+      display: none;
+    }
+    
+    .header__logo-text {
+      font-size: 20px;
+    }
+    
+    .header__logo-img {
+      height: {{ section.settings.logo_height | default: 28 | times: 0.85 | round }}px;
+    }
+    
+    .header__icons {
+      gap: 15px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('.header');
+    
+    // Scroll effect for transparent header
+    if (header.classList.contains('header--transparent')) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 100) {
+          header.classList.add('is-scrolled');
+        } else {
+          header.classList.remove('is-scrolled');
+        }
+      });
+    }
+    
+    // Dropdown submenu
+    const dropdownTrigger = document.querySelector('[data-dropdown-trigger]');
+    if (dropdownTrigger) {
+      dropdownTrigger.addEventListener('click', function(e) {
+        // Don't close if clicking inside submenu
+        if (e.target.closest('[data-submenu]')) return;
+        
+        this.classList.toggle('is-active');
+      });
+      
+      // Close when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!dropdownTrigger.contains(e.target)) {
+          dropdownTrigger.classList.remove('is-active');
+        }
+      });
+    }
+    
+    // Mobile/Off-canvas Menu
+    const menuTrigger = document.querySelector('[data-menu-trigger]');
+    const mobileMenu = document.querySelector('[data-mobile-menu]');
+    const menuOverlay = document.querySelector('[data-menu-overlay]');
+    const menuClose = document.querySelector('[data-menu-close]');
+    
+    function openMenu() {
+      mobileMenu.classList.add('is-active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeMenu() {
+      mobileMenu.classList.remove('is-active');
+      document.body.style.overflow = '';
+    }
+    
+    if (menuTrigger && mobileMenu) {
+      menuTrigger.addEventListener('click', openMenu);
+    }
+    
+    if (menuOverlay) {
+      menuOverlay.addEventListener('click', closeMenu);
+    }
+    
+    if (menuClose) {
+      menuClose.addEventListener('click', closeMenu);
+    }
+    
+    // Close on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && mobileMenu.classList.contains('is-active')) {
+        closeMenu();
+      }
+    });
+    
+    // Update wishlist count from localStorage
+    function updateWishlistCount() {
+      try {
+        const stored = localStorage.getItem('serenity_wishlist');
+        const wishlist = stored ? JSON.parse(stored) : [];
+        const countEl = document.querySelector('[data-wishlist-count]');
+        if (countEl) {
+          countEl.textContent = wishlist.length;
+          countEl.style.display = wishlist.length > 0 ? 'flex' : 'none';
+        }
+      } catch (e) {
+        console.error('Error reading wishlist:', e);
+      }
+    }
+    
+    // Initial load
+    updateWishlistCount();
+    
+    // Listen for storage changes (when wishlist is updated from other pages)
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'serenity_wishlist') {
+        updateWishlistCount();
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_dark",
+      "label": "Logo oscuro",
+      "info": "Logo para fondos claros (páginas normales, header con scroll)"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_light",
+      "label": "Logo claro",
+      "info": "Logo para fondos oscuros (hero banner transparente)"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Altura del logo",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Mobile / Off-canvas Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "mobile_menu",
+      "label": "Mobile menu",
+      "info": "Menu displayed in the side panel when clicking the hamburger icon"
+    },
+    {
+      "type": "header",
+      "content": "Submenu Dropdown"
+    },
+    {
+      "type": "text",
+      "id": "submenu_title",
+      "label": "Submenu title",
+      "default": "Candles"
+    },
+    {
+      "type": "collection",
+      "id": "submenu_collection",
+      "label": "Collection to display in submenu"
+    }
+  ]
+}
+{% endschema %}

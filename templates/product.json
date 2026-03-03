@@ -1,0 +1,85 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "bundle_YDpinT": {
+          "type": "bundle",
+          "settings": {
+            "image": "shopify://shop_images/Frame_837.png",
+            "title": "Save 20% with the Serenity and Mediterranean bundle",
+            "product": "pedregal",
+            "variant_id": "",
+            "price": "35.00",
+            "compare_price": "45.00"
+          }
+        },
+        "bundle_qKxMUN": {
+          "type": "bundle",
+          "settings": {
+            "image": "shopify://shop_images/Frame_837.png",
+            "title": "Save 20% with the Serenity and Mediterranean bundle",
+            "product": "pedregal",
+            "variant_id": "",
+            "price": "35.00",
+            "compare_price": "45.00"
+          }
+        }
+      },
+      "block_order": [
+        "bundle_YDpinT",
+        "bundle_qKxMUN"
+      ],
+      "settings": {
+        "show_subtitle": true,
+        "subtitle": "More than a Scent. It's a Ritual.",
+        "show_delivery_date": true,
+        "delivery_min_days": 3,
+        "delivery_max_days": 7,
+        "delivery_text": "",
+        "shop_now_text": "SHOP NOW",
+        "add_to_cart_text": "ADD TO CART",
+        "show_accordions": true,
+        "details_title": "Details",
+        "details_content": "",
+        "ingredients_title": "Ingredients",
+        "ingredients_content": ""
+      }
+    },
+    "testimonials_masonry_UJzxJn": {
+      "type": "testimonials-masonry",
+      "name": "Testimonials Masonry",
+      "settings": {
+        "background_color": "#f0ecdf",
+        "title": "OUR CLIENTS SAYS",
+        "subtitle": "Únete a miles de personas que han transformado su ecommerce con Convert",
+        "rating": "4.8",
+        "rating_text": "Average rating from over 8,500+ reviews and.",
+        "rating_image": "shopify://shop_images/Frame_674.png",
+        "rating_image_height": 50,
+        "laurel_height": 40
+      }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "title": "ALSO LIKE",
+        "add_button_text": "ADD +"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "testimonials_masonry_UJzxJn",
+    "recommendations"
+  ]
+}

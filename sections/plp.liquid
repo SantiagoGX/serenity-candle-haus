@@ -1,0 +1,595 @@
+{% comment %} sections/main-collection-product-grid.liquid - PLP DINÁMICO {% endcomment %}
+
+{% assign products_to_show = section.settings.products_to_show | default: 6 %}
+{% if products_to_show > 12 %}
+  {% assign products_to_show = 12 %}
+{% endif %}
+
+{% comment %} 
+  Usamos la variable 'collection' que Shopify provee automáticamente 
+  cuando estamos en una página de colección.
+{% endcomment %}
+
+{% if collection %}
+  {% assign current_collection = collection %}
+{% else %}
+  {% assign current_collection = collections['all'] %}
+{% endif %}
+
+<div class="collection-grid-section" data-section-id="{{ section.id }}">
+  
+  {% comment %} Header: Título izquierda + Descripción derecha {% endcomment %}
+  <div class="collection-grid__header-container">
+    <div class="collection-grid__header">
+      {% comment %} Si hay colección actual, usamos su título, si no, el setting {% endcomment %}
+      <h1 class="collection-grid__title avigea-font">
+        {{ section.settings.title | default: current_collection.title | default: 'CANDLES' }}
+      </h1>
+      
+      {% if section.settings.description != blank %}
+        <div class="collection-grid__description helixa-font">
+          {{ section.settings.description }}
+        </div>
+      {% elsif current_collection.description != blank %}
+        <div class="collection-grid__description helixa-font">
+          {{ current_collection.description }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% comment %} Grilla de productos {% endcomment %}
+  <div class="collection-grid__container">
+    <div class="collection-grid">
+      {% if current_collection and current_collection.products.size > 0 %}
+        {% for product in current_collection.products limit: products_to_show %}
+          {% assign product_category = product.collections.first.title | default: 'Candle' %}
+          
+          <div class="collection-grid__item">
+            <div class="product-card-carousel">
+              <div class="product-card-carousel__image-wrapper">
+                <span class="product-card-carousel__category">{{ product_category | upcase }}</span>
+                <button class="product-card-carousel__wishlist" data-wishlist-btn data-product-id="{{ product.id }}" aria-label="Add {{ product.title | escape }} to wishlist" type="button">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+                <a href="{{ product.url }}" class="product-card-carousel__link" aria-label="View {{ product.title | escape }}">
+                  {% if product.featured_image %}
+                    <img 
+                      srcset="{%- if product.featured_image.width >= 375 -%}{{ product.featured_image | img_url: '375x' }} 375w,{%- endif -%}
+                              {%- if product.featured_image.width >= 550 -%}{{ product.featured_image | img_url: '550x' }} 550w,{%- endif -%}
+                              {%- if product.featured_image.width >= 750 -%}{{ product.featured_image | img_url: '750x' }} 750w,{%- endif -%}
+                              {{ product.featured_image | img_url: 'master' }} {{ product.featured_image.width }}w"
+                      src="{{ product.featured_image | img_url: '550x' }}"
+                      sizes="(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw"
+                      alt="{{ product.featured_image.alt | default: product.title }}"
+                      loading="lazy"
+                      class="product-card-carousel__image"
+                      width="{{ product.featured_image.width }}"
+                      height="{{ product.featured_image.height }}"
+                    >
+                  {% else %}
+                    <div class="product-card-carousel__placeholder">
+                      <span class="placeholder-number">{{ forloop.index }}</span>
+                    </div>
+                  {% endif %}
+                </a>
+              </div>
+              <div class="product-card-carousel__info">
+                <div class="product-card-carousel__meta">
+                  <h3 class="product-card-carousel__name">{{ product.title }}</h3>
+                  <span class="product-card-carousel__price">{{ product.price | money }}</span>
+                </div>
+                {% if product.first_available_variant and product.available %}
+                  <button class="product-card-carousel__add-btn" 
+                    data-add-to-cart 
+                    data-product-id="{{ product.id }}" 
+                    data-variant-id="{{ product.first_available_variant.id }}"
+                    type="button">
+                    ADD +
+                  </button>
+                {% else %}
+                  <button class="product-card-carousel__add-btn product-card-carousel__add-btn--disabled" disabled type="button">
+                    SOLD OUT
+                  </button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {% comment %} Placeholders cuando no hay colección {% endcomment %}
+        {% for i in (1..products_to_show) %}
+          <div class="collection-grid__item">
+            <div class="product-card-carousel product-card-carousel--placeholder">
+              <div class="product-card-carousel__image-wrapper">
+                <span class="product-card-carousel__category">COCONUT</span>
+                <button class="product-card-carousel__wishlist" aria-label="Add to wishlist" type="button">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+                <div class="product-card-carousel__placeholder">
+                  <span class="placeholder-number">{{ forloop.index }}</span>
+                </div>
+              </div>
+              <div class="product-card-carousel__info">
+                <div class="product-card-carousel__meta">
+                  <h3 class="product-card-carousel__name">Cute Candle</h3>
+                  <span class="product-card-carousel__price">$1,900.78</span>
+                </div>
+                <button class="product-card-carousel__add-btn" type="button">ADD +</button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  {% comment %} Botón Ver Más - Solo se muestra si hay más productos que los mostrados {% endcomment %}
+  {% if section.settings.show_view_all and current_collection and current_collection.products.size > products_to_show %}
+    <div class="collection-grid__footer">
+      <a href="{{ current_collection.url }}" class="btn-view-all helixa-font">
+        {{ section.settings.view_all_text | default: 'VIEW ALL' }}
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .collection-grid-section {
+    padding: 140px 0;
+    background: #FDFBF5;
+  }
+
+  .collection-grid__header-container {
+    max-width: 1512px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  .collection-grid__header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .collection-grid__header {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      text-align: center;
+    }
+  }
+
+  .collection-grid__title {
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #6B550E;
+    text-transform: uppercase;
+    letter-spacing: -4px;
+    margin: 0;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .collection-grid__description {
+    font-family: 'Helvetica World', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    color: #6D6C6C;
+    line-height: 1.6;
+    max-width: 500px;
+    margin-left: auto;
+  }
+
+  @media (max-width: 768px) {
+    .collection-grid__description {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  /* Contenedor de grilla */
+  .collection-grid__container {
+    max-width: 1512px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  @media (max-width: 990px) {
+    .collection-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 550px) {
+    .collection-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+
+  .collection-grid__item {
+    width: 100%;
+  }
+
+  /* Product Card - Mismos estilos que el carrusel */
+  .product-card-carousel {
+    background: transparent;
+  }
+
+  .product-card-carousel__image-wrapper {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: #e8e4d9;
+    overflow: hidden;
+  }
+
+  .product-card-carousel__category {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.95);
+    font-family: 'Helvetica World', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6B550E;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .product-card-carousel__wishlist {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border: none;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6B550E;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .product-card-carousel__wishlist:hover {
+    background: #6B550E;
+    color: #fff;
+  }
+
+  .product-card-carousel__wishlist.is-active svg {
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  .product-card-carousel__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-card-carousel__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+
+  .product-card-carousel:hover .product-card-carousel__image {
+    transform: scale(1.05);
+  }
+
+  .product-card-carousel__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e8e4d9 0%, #d4d0c5 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .placeholder-number {
+    font-family: 'Helvetica World', sans-serif;
+    font-size: 48px;
+    color: #6B550E;
+    opacity: 0.3;
+  }
+
+  .product-card-carousel__info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    gap: 12px;
+  }
+
+  .product-card-carousel__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .product-card-carousel__name {
+    font-family: 'Helvetica World', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2C2C2C;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .product-card-carousel__price {
+    font-family: 'Helvetica World', sans-serif;
+    font-size: 14px;
+    color: #6D6C6C;
+    font-weight: 400;
+  }
+
+  .product-card-carousel__add-btn {
+    padding: 10px 20px;
+    background: #F0ECDF;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Helvetica World', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6B550E;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    min-width: 70px;
+  }
+
+  .product-card-carousel__add-btn:hover:not(:disabled) {
+    background: #6B550E;
+    color: #fff;
+  }
+
+  .product-card-carousel__add-btn--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #E0DCD1;
+  }
+
+  /* Footer con botón opcional */
+  .collection-grid__footer {
+    max-width: 1512px;
+    margin: 60px auto 0;
+    padding: 0 20px;
+    text-align: center;
+  }
+
+  .btn-view-all {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFFFFF;
+    color: #6B550E;
+    border: 1px solid rgba(107, 85, 14, 0.2);
+    border-radius: 1000px;
+    padding: 20px 40px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-view-all:hover {
+    background-color: #F0ECDF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(107, 85, 14, 0.08);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+
+    // Wishlist functionality
+    const wishlistBtns = section.querySelectorAll('[data-wishlist-btn]');
+    
+    function getWishlist() {
+      try {
+        const stored = localStorage.getItem('serenity_wishlist');
+        return stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        console.warn('LocalStorage not available:', e);
+        return [];
+      }
+    }
+    
+    function saveWishlist(wishlist) {
+      try {
+        localStorage.setItem('serenity_wishlist', JSON.stringify(wishlist));
+        return true;
+      } catch (e) {
+        console.warn('Could not save wishlist:', e);
+        return false;
+      }
+    }
+
+    const wishlist = getWishlist();
+    wishlistBtns.forEach(function(btn) {
+      const productId = btn.dataset.productId;
+      if (!productId) return;
+      
+      if (wishlist.includes(productId)) {
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-label', 'Remove from wishlist');
+      }
+
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let currentWishlist = getWishlist();
+        
+        if (btn.classList.contains('is-active')) {
+          currentWishlist = currentWishlist.filter(function(id) { return id !== productId; });
+          btn.classList.remove('is-active');
+          btn.setAttribute('aria-label', 'Add to wishlist');
+        } else {
+          currentWishlist.push(productId);
+          btn.classList.add('is-active');
+          btn.setAttribute('aria-label', 'Remove from wishlist');
+        }
+        
+        if (saveWishlist(currentWishlist)) {
+          const headerCount = document.querySelector('[data-wishlist-count]');
+          if (headerCount) {
+            headerCount.textContent = currentWishlist.length;
+            headerCount.style.display = currentWishlist.length > 0 ? 'flex' : 'none';
+          }
+        }
+      });
+    });
+
+    // Add to cart functionality
+    const addToCartBtns = section.querySelectorAll('[data-add-to-cart]');
+    addToCartBtns.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const variantId = btn.dataset.variantId;
+        const originalText = btn.textContent;
+        
+        if (!variantId) {
+          console.error('No variant ID found');
+          btn.textContent = 'ERROR';
+          setTimeout(function() { btn.textContent = originalText; }, 2000);
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'ADDING...';
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({
+            items: [{
+              id: variantId,
+              quantity: 1
+            }]
+          })
+        })
+        .then(function(response) {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .then(function() {
+          return fetch('/cart.js');
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(cart) {
+          const cartCount = document.querySelector('[data-cart-count]');
+          if (cartCount) {
+            cartCount.textContent = cart.item_count;
+            cartCount.style.display = cart.item_count > 0 ? 'flex' : 'none';
+          }
+          
+          btn.textContent = 'ADDED!';
+          setTimeout(function() {
+            btn.textContent = originalText;
+            btn.disabled = false;
+          }, 2000);
+        })
+        .catch(function(error) {
+          console.error('Error adding to cart:', error);
+          btn.textContent = 'FAILED';
+          setTimeout(function() {
+            btn.textContent = originalText;
+            btn.disabled = false;
+          }, 2000);
+        });
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection Product Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title (optional)",
+      "info": "Leave empty to use collection title automatically"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description (optional)",
+      "info": "Leave empty to use collection description automatically"
+    },
+
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 3,
+      "max": 12,
+      "step": 3,
+      "default": 6,
+      "info": "If the collection has fewer products, they will be repeated to fill this amount"
+    },
+    {
+      "type": "header",
+      "content": "Footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All' button",
+      "default": false,
+      "info": "Only shows if collection has more products than displayed"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "Button text",
+      "default": "VIEW ALL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Product Grid",
+      "settings": {
+        "products_to_show": 6
+      }
+    }
+  ]
+}
+{% endschema %}

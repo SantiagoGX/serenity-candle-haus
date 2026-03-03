@@ -1,0 +1,205 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_banner_bR3Tp9": {
+      "type": "hero-banner",
+      "name": "Hero Banner",
+      "settings": {
+        "background_type": "video",
+        "background_video": "shopify://files/videos/Video_Horizontal_Generado.mp4",
+        "overlay_color": "#000000",
+        "overlay_opacity": 45,
+        "overlay_custom_css": "",
+        "heading": "SET THE VIBE",
+        "subheading": "Lorem ipsum dolor sit amet consectetur.",
+        "divider_color": "#ffffff99",
+        "button_text": "SHOP NOW",
+        "button_link": "shopify://collections/all"
+      }
+    },
+    "product_carousel_TB747N": {
+      "type": "product-carousel",
+      "name": "Product Carousel",
+      "settings": {
+        "title": "CANDLES",
+        "subtitle": "Lorem ipsum dolor sit amet consectetur.",
+        "collection": "chocolate",
+        "products_to_show": 8
+      }
+    },
+    "featured_product_gKQ7VF": {
+      "type": "featured-product",
+      "name": "Featured Product Custom",
+      "settings": {
+        "product": "",
+        "background_color": "#fdfbf5",
+        "color_scheme": "default",
+        "media_height": 700,
+        "media_type": "video",
+        "video": "shopify://files/videos/From KlickPin CF Velas artesanales para una decoración acogedora.mp4",
+        "show_badge": true,
+        "badge_text": "NEW",
+        "heading": "CUTE CANDLE",
+        "tagline": "More than a Scent. It's a Ritual.",
+        "description": "<p>Lorem ipsum dolor sit amet consectetur. Tellus dignissim eu a odio. Nisl tristique nunc et nibh aliquet et elementum enim in.</p><p>Lorem ipsum dolor sit amet consectetur. Tellus dignissim eu a odio.</p>",
+        "compare_price": "$45.00",
+        "price": "$35.00",
+        "button_text": "VIEW PRODUCT",
+        "secondary_button_text": "VIEW PRODUCT",
+        "button_url": "",
+        "show_variant_selector": false,
+        "show_trust_badges": false,
+        "trust_icon_1": "✓",
+        "trust_text_1": "100% Natural Ingredients",
+        "show_shipping_info": false
+      }
+    },
+    "scrolling_gallery_FRCiBi": {
+      "type": "scrolling-gallery",
+      "blocks": {
+        "image_Lz4ncy": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/image_1.png"
+          }
+        },
+        "image_wWQYyi": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/image_2.png"
+          }
+        },
+        "image_c3xdMe": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/COMING_SOON.jpg"
+          }
+        },
+        "image_TEVVNh": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/image_3.png"
+          }
+        },
+        "image_dmAd4j": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/image_4.png"
+          }
+        }
+      },
+      "block_order": [
+        "image_Lz4ncy",
+        "image_wWQYyi",
+        "image_c3xdMe",
+        "image_TEVVNh",
+        "image_dmAd4j"
+      ],
+      "name": "Scroll Gallery",
+      "settings": {
+        "pre_title": "SERENITY",
+        "line_1": "THE SANCTUARY",
+        "line_2": "FOR YOUR SOUL",
+        "sub_text": "Lorem ipsum dolor sit amet consectetur."
+      }
+    },
+    "about_banner_W3daaV": {
+      "type": "about-banner",
+      "name": "About Banner",
+      "settings": {
+        "background_image": "shopify://shop_images/Frame_837.png",
+        "overlay_color": "#000000",
+        "overlay_opacity": 10,
+        "title": "ABOUT ME",
+        "description": "Lorem ipsum dolor sit amet consectetur. Tellus dignissim eu a odio. Nisl tristique nunc et nibh aliquet et elementum enim in."
+      }
+    },
+    "testimonials_masonry_GyL6jr": {
+      "type": "testimonials-masonry",
+      "blocks": {
+        "testimonial_kqNKXA": {
+          "type": "testimonial",
+          "settings": {
+            "title": "¡Por fin encontré la app de finanzas perfecta!",
+            "text": "He probado muchas aplicaciones de finanzas personales...",
+            "author": "María"
+          }
+        },
+        "testimonial_zVwTwx": {
+          "type": "testimonial",
+          "settings": {
+            "title": "¡Por fin encontré la app de finanzas perfecta!",
+            "text": "He probado muchas aplicaciones de finanzas personales...",
+            "author": "María"
+          }
+        },
+        "testimonial_TY9nta": {
+          "type": "testimonial",
+          "settings": {
+            "title": "¡Por fin encontré la app de finanzas perfecta!",
+            "text": "He probado muchas aplicaciones de finanzas personales...faserrereqreweqrerwetwtwrtwtwtrwtwr He probado muchas aplicaciones de finanzas personales...faserrereqreweqrerwetwtwrtwtwtrwtwrHe probado muchas aplicaciones de finanzas personales...faserrereqreweqrerwetwtwrtwtwtrwtwr",
+            "author": "María"
+          }
+        },
+        "testimonial_MkExUA": {
+          "type": "testimonial",
+          "settings": {
+            "title": "¡Por fin encontré la app de finanzas perfecta!",
+            "text": "He probado muchas aplicaciones de finanzas personales...",
+            "author": "María"
+          }
+        },
+        "testimonial_djtGgr": {
+          "type": "testimonial",
+          "settings": {
+            "title": "¡Por fin encontré la app de finanzas perfecta!",
+            "text": "He probado muchas aplicaciones de finanzas personales...",
+            "author": "María"
+          }
+        },
+        "testimonial_JdJtFi": {
+          "type": "testimonial",
+          "settings": {
+            "title": "¡Por fin encontré la app de finanzas perfecta!",
+            "text": "He probado muchas aplicaciones de finanzas personales...",
+            "author": "María"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_kqNKXA",
+        "testimonial_zVwTwx",
+        "testimonial_TY9nta",
+        "testimonial_MkExUA",
+        "testimonial_djtGgr",
+        "testimonial_JdJtFi"
+      ],
+      "name": "Testimonials Masonry",
+      "settings": {
+        "background_color": "#fdfbf5",
+        "title": "OUR CLIENTS SAYS",
+        "subtitle": "Únete a miles de personas que han transformado su ecommerce con Convert",
+        "rating": "4.8",
+        "rating_text": "Average rating from over 8,500+ reviews and.",
+        "rating_image_height": 50,
+        "laurel_height": 30
+      }
+    }
+  },
+  "order": [
+    "hero_banner_bR3Tp9",
+    "product_carousel_TB747N",
+    "featured_product_gKQ7VF",
+    "scrolling_gallery_FRCiBi",
+    "about_banner_W3daaV",
+    "testimonials_masonry_GyL6jr"
+  ]
+}

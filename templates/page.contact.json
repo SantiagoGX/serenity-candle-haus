@@ -1,0 +1,46 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "contact-hero",
+      "settings": {
+        "background_image": "shopify://shop_images/afdaasfa.png",
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "pre_title": "Get Help",
+        "title": "Contact With Serenity"
+      }
+    },
+    "contact_form_C3i3tj": {
+      "type": "contact-form",
+      "name": "Contact Form",
+      "settings": {
+        "title": "We would like to hear you",
+        "subtitle": "Leave your message in the form and a member of our team will get back to you as soon as possible.",
+        "name_label": "Name",
+        "email_label": "Email",
+        "message_label": "Message",
+        "submit_label": "Send",
+        "success_message": "¡Gracias por tu mensaje! Te responderemos pronto.",
+        "contact_label": "Contact Us",
+        "email": "info@serenity.com",
+        "weekdays_label": "Monday - Friday",
+        "weekdays_hours": "10:00 am — 7:00 pm",
+        "saturday_label": "Saturday",
+        "saturday_hours": "10:00 am — 2:00 pm"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "contact_form_C3i3tj"
+  ]
+}

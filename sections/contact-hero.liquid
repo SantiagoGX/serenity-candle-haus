@@ -1,0 +1,117 @@
+{% assign background_image = section.settings.background_image %}
+
+<section class="contact-hero" data-section-id="{{ section.id }}" style="{% if background_image %}background-image: url('{{ background_image | image_url: width: 2000 }}');{% endif %}">
+  <div class="contact-hero__overlay" style="background-color: {{ section.settings.overlay_color }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+  
+  <div class="contact-hero__content page-width">
+    <span class="contact-hero__pre-title">{{ section.settings.pre_title | default: 'Get Help' }}</span>
+    <h1 class="contact-hero__title">{{ section.settings.title | default: 'Contact With Serenity' }}</h1>
+  </div>
+</section>
+
+<style>
+  .contact-hero {
+    position: relative;
+    min-height: 50vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 40px;
+  }
+  
+  .contact-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  .contact-hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+  }
+  
+  .contact-hero__pre-title {
+    display: block;
+    font-family: var(--font-helvetica-world);
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  
+  .contact-hero__title {
+    font-family: var(--font-helvetica-world);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    color: #fff;
+    text-transform: capitalize;
+    letter-spacing: -4px;
+    line-height: 1.1;
+    margin: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .contact-hero {
+      min-height: 80vh;
+      padding-bottom: 60px;
+    }
+    
+    .contact-hero__title {
+      font-size: 32px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Contact Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "text",
+      "id": "pre_title",
+      "label": "Pre-title",
+      "default": "Get Help"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Contact With Serenity"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Hero"
+    }
+  ]
+}
+{% endschema %}

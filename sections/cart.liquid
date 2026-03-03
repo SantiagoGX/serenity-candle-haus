@@ -1,0 +1,623 @@
+{% assign cart_item_count = cart.item_count %}
+
+<section class="cart-section" data-section-id="{{ section.id }}">
+  <div class="cart__container">
+    <h1 class="cart__title">{{ section.settings.title | default: 'Shopping Cart' }}</h1>
+
+    {% if cart_item_count > 0 %}
+      <form action="{{ routes.cart_url }}" method="post" class="cart__form">
+        <div class="cart__items">
+          {% for item in cart.items %}
+            <div class="cart__item" data-cart-item data-variant-id="{{ item.variant.id }}">
+              <div class="cart__item-image">
+                {% if item.image %}
+                  {{ item.image | image_url: width: 200 | image_tag: 
+                    loading: 'lazy',
+                    alt: item.product.title
+                  }}
+                {% else %}
+                  <div class="cart__item-placeholder"></div>
+                {% endif %}
+              </div>
+              
+              <div class="cart__item-details">
+                <h3 class="cart__item-name">
+                  <a href="{{ item.url }}">{{ item.product.title }}</a>
+                </h3>
+                {% if item.variant.title != 'Default Title' %}
+                  <p class="cart__item-variant">{{ item.variant.title }}</p>
+                {% endif %}
+                <span class="cart__item-price">{{ item.price | money }}</span>
+              </div>
+              
+              <div class="cart__item-actions">
+                <div class="cart__item-quantity">
+                  <button type="button" class="cart__qty-btn cart__qty-btn--minus" data-qty-minus>-</button>
+                  <input 
+                    type="number" 
+                    name="updates[]" 
+                    value="{{ item.quantity }}" 
+                    min="0"
+                    class="cart__qty-input"
+                    data-qty-input
+                  >
+                  <button type="button" class="cart__qty-btn cart__qty-btn--plus" data-qty-plus>+</button>
+                </div>
+                
+                <a href="{{ item.url_to_remove }}" class="cart__item-remove" data-remove-item>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                  </svg>
+                </a>
+              </div>
+              
+              <div class="cart__item-total">
+                {{ item.line_price | money }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="cart__footer">
+          <div class="cart__notes">
+            <label for="CartNote" class="cart__label">{{ section.settings.note_label | default: 'Order notes' }}</label>
+            <textarea 
+              name="note" 
+              id="CartNote" 
+              class="cart__note"
+              placeholder="{{ section.settings.note_placeholder | default: 'Special instructions...' }}"
+            >{{ cart.note }}</textarea>
+          </div>
+          
+          <div class="cart__summary">
+            <div class="cart__subtotal">
+              <span class="cart__subtotal-label">{{ section.settings.subtotal_label | default: 'Subtotal' }}</span>
+              <span class="cart__subtotal-value">{{ cart.total_price | money }}</span>
+            </div>
+            
+            {% if section.settings.show_shipping_note %}
+              <p class="cart__shipping-note">{{ section.settings.shipping_note | default: 'Shipping & taxes calculated at checkout' }}</p>
+            {% endif %}
+            
+            <button type="submit" name="checkout" class="cart__checkout-btn">
+              {{ section.settings.checkout_text | default: 'Proceed to Checkout' }}
+            </button>
+            
+            <a href="{{ routes.all_products_collection_url }}" class="cart__continue">
+              {{ section.settings.continue_text | default: 'Continue Shopping' }}
+            </a>
+          </div>
+        </div>
+      </form>
+    {% else %}
+      <div class="cart__empty">
+        <div class="cart__empty-icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </div>
+        <h2 class="cart__empty-title">{{ section.settings.empty_title | default: 'Your cart is empty' }}</h2>
+        <p class="cart__empty-text">{{ section.settings.empty_text | default: "Looks like you haven't added anything to your cart yet." }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="cart__empty-btn">
+          {{ section.settings.empty_button | default: 'Start Shopping' }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .cart-section {
+    padding: 120px 24px 100px;
+    background: #FDFBF5;
+    min-height: 60vh;
+  }
+
+  .cart__container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .cart__title {
+    font-family: var(--font-helvetica-world);
+    font-size: clamp(32px, 5vw, 48px);
+    color: var(--color-title-dark, #6B550E);
+    text-transform: uppercase;
+    margin: 0 0 40px 0;
+    letter-spacing: -4px;
+  }
+
+  .cart__form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .cart__items {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .cart__item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto auto;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    background: #fff;
+    border-radius: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .cart__item {
+      grid-template-columns: 80px 1fr auto;
+      gap: 16px;
+    }
+    
+    .cart__item-total {
+      grid-column: 2;
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .cart__item {
+      grid-template-columns: 1fr;
+    }
+    
+    .cart__item-image {
+      max-width: 120px;
+    }
+  }
+
+  .cart__item-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+  }
+
+  .cart__item-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #e8e4d9 0%, #d4d0c5 100%);
+    border-radius: 4px;
+  }
+
+  .cart__item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cart__item-name a {
+    font-family: var(--font-helvetica-world);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-title-dark, #6B550E);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .cart__item-name a:hover {
+    opacity: 0.7;
+  }
+
+  .cart__item-variant {
+    font-family: var(--font-helixa);
+    font-size: 13px;
+    color: var(--color-paragraph-dark, #6D6C6C);
+    margin: 0;
+  }
+
+  .cart__item-price {
+    font-family: var(--font-helixa);
+    font-size: 14px;
+    color: #999;
+  }
+
+  .cart__item-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .cart__item-quantity {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(107, 85, 14, 0.15);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .cart__qty-btn {
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border: none;
+    font-family: var(--font-helixa);
+    font-size: 16px;
+    color: var(--color-title-dark, #6B550E);
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .cart__qty-btn:hover {
+    background: #F0ECDF;
+  }
+
+  .cart__qty-input {
+    width: 50px;
+    height: 36px;
+    border: none;
+    border-left: 1px solid rgba(107, 85, 14, 0.15);
+    border-right: 1px solid rgba(107, 85, 14, 0.15);
+    text-align: center;
+    font-family: var(--font-helixa);
+    font-size: 14px;
+    color: var(--color-title-dark, #6B550E);
+    outline: none;
+  }
+
+  .cart__item-remove {
+    color: #999;
+    transition: color 0.3s ease;
+  }
+
+  .cart__item-remove:hover {
+    color: #c44;
+  }
+
+  .cart__item-total {
+    font-family: var(--font-helvetica-world);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-title-dark, #6B550E);
+    text-align: right;
+    min-width: 80px;
+  }
+
+  .cart__footer {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .cart__footer {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .cart__notes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cart__label {
+    font-family: var(--font-helvetica-world);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-title-dark, #6B550E);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .cart__note {
+    width: 100%;
+    min-height: 120px;
+    padding: 16px;
+    border: 1px solid rgba(107, 85, 14, 0.15);
+    border-radius: 8px;
+    background: #fff;
+    font-family: var(--font-helvetica-world);
+    font-size: 14px;
+    color: var(--color-title-dark, #6B550E);
+    resize: vertical;
+    outline: none;
+  }
+
+  .cart__note:focus {
+    border-color: rgba(107, 85, 14, 0.4);
+  }
+
+  .cart__summary {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 32px;
+    background: #fff;
+    border-radius: 8px;
+    height: fit-content;
+  }
+
+  .cart__subtotal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(107, 85, 14, 0.1);
+  }
+
+  .cart__subtotal-label {
+    font-family: var(--font-helvetica-world);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-title-dark, #6B550E);
+  }
+
+  .cart__subtotal-value {
+    font-family: var(--font-helvetica-world);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-title-dark, #6B550E);
+  }
+
+  .cart__shipping-note {
+    font-family: var(--font-helvetica-world);
+    font-size: 13px;
+    color: var(--color-paragraph-dark, #6D6C6C);
+    margin: 0;
+  }
+
+  .cart__checkout-btn {
+    padding: 18px 32px;
+    background: var(--color-title-dark, #6B550E);
+    color: #fff;
+    border: none;
+    border-radius: 1000px;
+    font-family: var(--font-helvetica-world);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .cart__checkout-btn:hover {
+    background: #5a480c;
+    transform: translateY(-2px);
+  }
+
+  .cart__continue {
+    text-align: center;
+    font-family: var(--font-helvetica-world);
+    font-size: 13px;
+    color: var(--color-paragraph-dark, #6D6C6C);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .cart__continue:hover {
+    color: var(--color-title-dark, #6B550E);
+  }
+
+  /* Empty Cart */
+  .cart__empty {
+    text-align: center;
+    padding: 80px 24px;
+  }
+
+  .cart__empty-icon {
+    color: rgba(107, 85, 14, 0.3);
+    margin-bottom: 24px;
+  }
+
+  .cart__empty-title {
+    font-family: var(--font-helvetica-world);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--color-title-dark, #6B550E);
+    margin: 0 0 12px 0;
+  }
+
+  .cart__empty-text {
+    font-family: var(--font-helvetica-world);
+    font-size: 15px;
+    color: var(--color-paragraph-dark, #6D6C6C);
+    margin: 0 0 32px 0;
+  }
+
+  .cart__empty-btn {
+    display: inline-block;
+    padding: 16px 40px;
+    background: var(--color-title-dark, #6B550E);
+    color: #fff;
+    border-radius: 1000px;
+    font-family: var(--font-helvetica-world);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .cart__empty-btn:hover {
+    background: #5a480c;
+    transform: translateY(-2px);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const qtyBtns = document.querySelectorAll('.cart__qty-btn');
+    const removeBtns = document.querySelectorAll('[data-remove-item]');
+    
+    // Update quantity via AJAX
+    async function updateCart(variantId, quantity) {
+      try {
+        const response = await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({
+            id: variantId,
+            quantity: quantity
+          })
+        });
+        
+        if (!response.ok) throw new Error('Update failed');
+        
+        const cart = await response.json();
+        
+        // Update cart count in header
+        const cartCount = document.querySelector('[data-cart-count]');
+        if (cartCount) {
+          cartCount.textContent = cart.item_count;
+          cartCount.style.display = cart.item_count > 0 ? 'flex' : 'none';
+        }
+        
+        // Reload page to show updated cart
+        window.location.reload();
+      } catch (error) {
+        console.error('Error updating cart:', error);
+      }
+    }
+    
+    // Quantity buttons
+    qtyBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const item = btn.closest('[data-cart-item]');
+        const input = item.querySelector('.cart__qty-input');
+        const variantId = item.dataset.variantId;
+        let value = parseInt(input.value) || 0;
+        
+        if (btn.classList.contains('cart__qty-btn--minus')) {
+          value = Math.max(0, value - 1);
+        } else {
+          value = value + 1;
+        }
+        
+        input.value = value;
+        
+        // Update cart via AJAX
+        if (value === 0) {
+          // Remove item
+          updateCart(variantId, 0);
+        } else {
+          updateCart(variantId, value);
+        }
+      });
+    });
+    
+    // Remove buttons
+    removeBtns.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const item = btn.closest('[data-cart-item]');
+        const variantId = item.dataset.variantId;
+        updateCart(variantId, 0);
+      });
+    });
+    
+    // Manual input change
+    document.querySelectorAll('.cart__qty-input').forEach(function(input) {
+      input.addEventListener('change', function() {
+        const item = input.closest('[data-cart-item]');
+        const variantId = item.dataset.variantId;
+        let value = parseInt(input.value) || 0;
+        
+        if (value < 0) value = 0;
+        input.value = value;
+        
+        updateCart(variantId, value);
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page title",
+      "default": "Shopping Cart"
+    },
+    {
+      "type": "header",
+      "content": "Empty Cart"
+    },
+    {
+      "type": "text",
+      "id": "empty_title",
+      "label": "Empty cart title",
+      "default": "Your cart is empty"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Empty cart text",
+      "default": "Looks like you haven't added anything to your cart yet."
+    },
+    {
+      "type": "text",
+      "id": "empty_button",
+      "label": "Empty cart button",
+      "default": "Start Shopping"
+    },
+    {
+      "type": "header",
+      "content": "Order Summary"
+    },
+    {
+      "type": "text",
+      "id": "subtotal_label",
+      "label": "Subtotal label",
+      "default": "Subtotal"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping_note",
+      "label": "Show shipping note",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "shipping_note",
+      "label": "Shipping note",
+      "default": "Shipping & taxes calculated at checkout"
+    },
+    {
+      "type": "text",
+      "id": "checkout_text",
+      "label": "Checkout button text",
+      "default": "Proceed to Checkout"
+    },
+    {
+      "type": "text",
+      "id": "continue_text",
+      "label": "Continue shopping text",
+      "default": "Continue Shopping"
+    },
+    {
+      "type": "header",
+      "content": "Order Notes"
+    },
+    {
+      "type": "text",
+      "id": "note_label",
+      "label": "Note label",
+      "default": "Order notes"
+    },
+    {
+      "type": "text",
+      "id": "note_placeholder",
+      "label": "Note placeholder",
+      "default": "Special instructions..."
+    }
+  ]
+}
+{% endschema %}

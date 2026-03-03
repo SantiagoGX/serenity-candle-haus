@@ -1,0 +1,244 @@
+{% liquid
+  assign images = section.blocks | where: 'type', 'image' | map: 'settings' | map: 'image' | compact
+  if images.size == 0
+    assign use_placeholder = true
+  endif
+%}
+
+<section class="scroll-gallery" data-section-id="{{ section.id }}">
+  <div class="scroll-gallery__sticky">
+    <div class="scroll-gallery__text">
+      <span class="scroll-gallery__pre-title">{{ section.settings.pre_title | default: 'SERENITY' }}</span>
+      <span class="scroll-gallery__line">{{ section.settings.line_1 | default: 'THE SANCTUARY' }}</span>
+      <span class="scroll-gallery__line scroll-gallery__line--italic">{{ section.settings.line_2 | default: 'FOR YOUR SOUL' }}</span>
+      <p class="scroll-gallery__sub-text">{{ section.settings.sub_text | default: 'Lorem ipsum dolor sit amet consectetur.' }}</p>
+    </div>
+    
+    <div class="scroll-gallery__track" data-scroll-track>
+      {% if use_placeholder %}
+        {% for i in (1..6) %}
+          <div class="scroll-gallery__item" style="--rotation: {{ forloop.index | minus: 3 | times: 3 }}deg">
+            <div class="scroll-gallery__image-wrapper">
+              <div class="scroll-gallery__placeholder"></div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {% for image in images limit: 6 %}
+          {% assign rotation = forloop.index | minus: 3 | times: 4 %}
+          <div class="scroll-gallery__item" style="--rotation: {{ rotation }}deg">
+            <div class="scroll-gallery__image-wrapper">
+              {{ image | image_url: width: 600 | image_tag: 
+                loading: 'lazy',
+                class: 'scroll-gallery__image',
+                alt: image.alt | escape
+              }}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .scroll-gallery {
+    position: relative;
+    height: 300vh;
+    background: var(--bg-primary, #F0ECDF);
+  }
+  
+  .scroll-gallery__sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+
+  
+  .scroll-gallery__text {
+    position: absolute;
+    text-align: center;
+    z-index: 1;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .scroll-gallery__pre-title {
+    font-family: var(--font-helvetica-world);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-title-dark, #6B550E);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+  
+  .scroll-gallery__line {
+    display: block;
+    font-family: var(--font-helvetica-world);
+    font-size: clamp(40px, 8vw, 100px);
+    color: var(--color-title-dark, #6B550E);
+    text-transform: uppercase;
+    line-height: 1.05;
+    letter-spacing: -4px;
+  }
+  
+  .scroll-gallery__line--italic {
+    font-style: italic;
+  }
+  
+  .scroll-gallery__sub-text {
+    font-family: var(--font-helixa);
+    font-size: 14px;
+    color: var(--color-paragraph-dark, #6D6C6C);
+    margin-top: 16px;
+    font-weight: 400;
+  }
+  
+  .scroll-gallery__track {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    padding: 0 50vw;
+    will-change: transform;
+  }
+  
+  .scroll-gallery__item {
+    flex: 0 0 320px;
+    transform: rotate(var(--rotation, 0deg));
+    transition: transform 0.3s ease;
+  }
+  
+  .scroll-gallery__image-wrapper {
+    aspect-ratio: 3/4;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+  }
+  
+  .scroll-gallery__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .scroll-gallery__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #6B550E 0%, #8B7355 50%, #4A3A0A 100%);
+  }
+  
+  @media (max-width: 768px) {
+    .scroll-gallery__item {
+      flex: 0 0 220px;
+    }
+    
+    .scroll-gallery__track {
+      gap: 40px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+    
+    const track = section.querySelector('[data-scroll-track]');
+    if (!track) return;
+    
+    const items = track.querySelectorAll('.scroll-gallery__item');
+    const itemWidth = items[0]?.offsetWidth || 320;
+    const gap = 60;
+    const totalItemsWidth = (itemWidth + gap) * items.length;
+    const viewportWidth = window.innerWidth;
+    
+    function updateScroll() {
+      const rect = section.getBoundingClientRect();
+      const sectionHeight = section.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      
+      // Calculate raw scroll progress
+      let scrollProgress = (window.scrollY - (section.offsetTop - viewportHeight)) / (sectionHeight - viewportHeight);
+      
+      // Add delay: start animation after 20% of section scroll
+      const delay = 0.25; // 25% delay before animation starts
+      const adjustedProgress = Math.max(0, Math.min(1, (scrollProgress - delay) / (1 - delay)));
+      
+      // Start from right (off-screen) and move left
+      const startX = viewportWidth;
+      const endX = -(totalItemsWidth + 100);
+      const currentX = startX + (adjustedProgress * (endX - startX));
+      
+      track.style.transform = 'translateX(' + currentX + 'px)';
+    }
+    
+    window.addEventListener('scroll', updateScroll, { passive: true });
+    window.addEventListener('resize', updateScroll);
+    
+    // Initial position
+    updateScroll();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Scroll Gallery",
+  "settings": [
+    {
+      "type": "text",
+      "id": "pre_title",
+      "label": "Pre-title (top)",
+      "default": "SERENITY"
+    },
+    {
+      "type": "text",
+      "id": "line_1",
+      "label": "Main title line 1",
+      "default": "THE SANCTUARY"
+    },
+    {
+      "type": "text",
+      "id": "line_2",
+      "label": "Main title line 2",
+      "default": "FOR YOUR SOUL"
+    },
+    {
+      "type": "text",
+      "id": "sub_text",
+      "label": "Sub text (bottom)",
+      "default": "Lorem ipsum dolor sit amet consectetur."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Gallery Image",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scroll Gallery"
+    }
+  ]
+}
+{% endschema %}
