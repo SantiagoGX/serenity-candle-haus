@@ -20,7 +20,7 @@
         "overlay_custom_css": "",
         "heading": "SET THE VIBE.",
         "subheading": "candles that speak to your soul.",
-        "divider_color": "#fdfcf8",
+        "divider_color": "#ffffff",
         "button_text": "SHOP NOW",
         "button_link": "shopify://collections/all"
       }
@@ -78,7 +78,7 @@
       "name": "Featured Product Custom",
       "settings": {
         "product": "love-jones-candle",
-        "background_color": "#fdfcf8",
+        "background_color": "#ffffff",
         "color_scheme": "default",
         "media_height": 520,
         "media_type": "image",

@@ -126,7 +126,7 @@
 <style>
   .product-carousel-section {
     padding: 80px 0;
-  background: #FDFBF5;
+  background: var(--color-bg);
     overflow: hidden;
   }
 
@@ -144,7 +144,7 @@
   .product-carousel__title {
     font-family: var(--font-helvetica-world), Arial, sans-serif;
     font-size: 48px;
-    color: #6B550E;
+    color: var(--color-fg);
     text-transform: uppercase;
     letter-spacing: -4px;
     margin-bottom: 12px;
@@ -154,7 +154,7 @@
   .product-carousel__subtitle {
     font-family: 'Helvetica World', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 16px;
-    color: #6D6C6C;
+    color: var(--color-fg-muted);
     margin-bottom: 24px;
   }
 
@@ -170,8 +170,8 @@
     height: 44px;
     border-radius: 8px;
     background: #fff;
-    border: 1px solid rgba(107, 85, 14, 0.15);
-    color: #6B550E;
+    border: 1px solid var(--color-accent-a15);
+    color: var(--color-accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -180,7 +180,7 @@
   }
 
   .product-carousel__arrow:hover:not(:disabled) {
-    background: #6B550E;
+    background: var(--color-accent-solid);
     color: #fff;
   }
 
@@ -190,7 +190,7 @@
   }
 
   .product-carousel__arrow:focus-visible {
-    outline: 2px solid #6B550E;
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
 
@@ -220,7 +220,7 @@
   }
 
   .product-carousel__slide:focus-visible {
-    outline: 2px solid #6B550E;
+    outline: 2px solid var(--color-accent);
     outline-offset: 4px;
   }
 
@@ -239,7 +239,7 @@
   .product-card-carousel__image-wrapper {
     position: relative;
     aspect-ratio: 4 / 5;
-    background: #e8e4d9;
+    background: var(--color-border);
     overflow: hidden;
     border-radius: 4px;
   }
@@ -256,7 +256,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #6B550E;
+    color: var(--color-accent);
     border-radius: 2px;
   }
 
@@ -274,12 +274,12 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #6B550E;
+    color: var(--color-accent);
     transition: all 0.3s ease;
   }
 
   .product-card-carousel__wishlist:hover {
-    background: #6B550E;
+    background: var(--color-accent-solid);
     color: #fff;
   }
 
@@ -307,7 +307,7 @@
   .product-card-carousel__placeholder {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #e8e4d9 0%, #d4d0c5 100%);
+    background: var(--color-border);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -316,7 +316,7 @@
   .placeholder-number {
     font-family: 'Helvetica World', sans-serif;
     font-size: 48px;
-    color: #6B550E;
+    color: var(--color-accent);
     opacity: 0.3;
   }
 
@@ -337,45 +337,48 @@
     font-family: 'Helvetica World', sans-serif;
     font-size: 15px;
     font-weight: 500;
-    color: #6B550E;
+    color: var(--color-fg);
     margin: 0;
   }
 
   .product-card-carousel__price {
     font-family: 'Helvetica World', sans-serif;
     font-size: 14px;
-    color: #6D6C6C;
+    color: var(--color-accent);
   }
 
   .product-card-carousel__add-btn {
     padding: 14px 26px;
-    background: #F0ECDF;
-    border: none;
+    background: var(--color-bg);
+    border: 1px solid var(--color-accent);
     border-radius: 6px;
     font-family: 'Helvetica World', sans-serif;
     font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #6B550E;
+    color: var(--color-accent);
     cursor: pointer;
     transition: all 0.3s ease;
     min-width: 90px;
   }
 
   .product-card-carousel__add-btn:hover:not(:disabled) {
-    background: #6B550E;
+    background: var(--color-accent-solid);
+    border-color: var(--color-accent-solid);
     color: #fff;
   }
 
   .product-card-carousel__add-btn--disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    background: #E0DCD1;
+    background: var(--color-border);
+    border-color: var(--color-border);
+    color: var(--color-fg-muted);
   }
 
   .product-card-carousel__add-btn:focus-visible {
-    outline: 2px solid #6B550E;
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
 </style>
