@@ -7,14 +7,31 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-
- {
+{
   "name": "Footer Group",
   "type": "footer",
   "sections": {
     "footer": {
       "type": "footer",
+      "blocks": {
+        "menu_r3De7d": {
+          "type": "menu",
+          "disabled": true,
+          "settings": {
+            "heading": "",
+            "menu": ""
+          }
+        }
+      },
+      "block_order": [
+        "menu_r3De7d"
+      ],
       "settings": {
+        "background_color": "#fdfbf5",
+        "color_scheme": "default",
+        "agency_text": "Crafted with love by",
+        "agency_brand": "SNC Designs",
+        "agency_url": "https://snc-designs.com/"
       }
     }
   },

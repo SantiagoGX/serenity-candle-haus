@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "list_collections": {
+      "type": "list-collections",
+      "settings": {
+        "title": "COLLECTIONS",
+        "collections_to_show": 12,
+        "products_label": "PRODUCTS",
+        "button_text": "VIEW"
+      }
+    }
+  },
+  "order": [
+    "list_collections"
+  ]
+}

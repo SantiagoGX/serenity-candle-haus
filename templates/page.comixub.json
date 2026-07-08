@@ -1,0 +1,18 @@
+{
+  "layout": "coming-soon",
+  "sections": {
+    "comixub": {
+      "type": "comixub",
+      "settings": {
+        "heading": "COMING SOON",
+        "subheading": "Coming soon. Leave your email to be the first to know when it's available.",
+        "subheading_size": 16,
+        "placeholder": "Enter your email",
+        "button_text": "NOTIFY ME"
+      }
+    }
+  },
+  "order": [
+    "comixub"
+  ]
+}

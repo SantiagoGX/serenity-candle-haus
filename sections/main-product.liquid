@@ -1,5 +1,10 @@
 {% assign total_images = product.images.size %}
 
+{%- assign is_preorder = false -%}
+{%- if product.tags contains 'pre-order' -%}
+  {%- assign is_preorder = true -%}
+{%- endif -%}
+
 <section class="product-section" data-section-id="{{ section.id }}">
   <div class="product__layout">
     {% comment %} Gallery - 60% touches left edge {% endcomment %}
@@ -61,17 +66,26 @@
             <span class="product__subtitle">{{ section.settings.subtitle | default: "More than a Scent. It's a Ritual." }}</span>
           {% endif %}
           
+          {% if is_preorder %}
+            <span class="product__badge pre-order-badge">Pre-order</span>
+          {% endif %}
           <h1 class="product__title">{{ product.title }}</h1>
           
           <div class="product__price">{{ product.price | money }}</div>
           
           {% if section.settings.show_delivery_date %}
-            <div class="product__delivery" 
-                 data-delivery-date 
-                 data-min-days="{{ section.settings.delivery_min_days | default: 3 }}"
-                 data-max-days="{{ section.settings.delivery_max_days | default: 7 }}">
-              {{ section.settings.delivery_text | default: 'Recibe entre' }} <span class="delivery-date-range">...</span>
-            </div>
+            {% if is_preorder and section.settings.pre_order_delivery_text != blank %}
+              <div class="product__delivery">
+                {{ section.settings.pre_order_delivery_text }}
+              </div>
+            {% else %}
+              <div class="product__delivery" 
+                   data-delivery-date 
+                   data-min-days="{{ section.settings.delivery_min_days | default: 3 }}"
+                   data-max-days="{{ section.settings.delivery_max_days | default: 7 }}">
+                {{ section.settings.delivery_text | default: 'Arrives between' }} <span class="delivery-date-range">...</span>
+              </div>
+            {% endif %}
           {% endif %}
           
           {% if product.description != blank %}
@@ -85,7 +99,11 @@
             
             <div class="product__actions">
               <button type="submit" class="product__btn product__btn--primary" name="checkout" data-checkout-btn>
-                {{ section.settings.shop_now_text | default: 'SHOP NOW' }}
+                {% if is_preorder %}
+                  Pre-order Now
+                {% else %}
+                  {{ section.settings.shop_now_text | default: 'SHOP NOW' }}
+                {% endif %}
               </button>
               
               <button type="button" class="product__btn product__btn--secondary" data-add-to-cart-btn>
@@ -162,6 +180,19 @@
 </section>
 
 <style>
+  .pre-order-badge {
+    display: inline-block;
+    background: #6B550E;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-family: var(--font-helvetica-world, sans-serif);
+    border-radius: 4px;
+    width: fit-content;
+    margin-bottom: -10px;
+  }
+
   .product-section {
     padding: 40px 0 100px;
     background: #FDFBF5;
@@ -705,7 +736,13 @@
       "type": "text",
       "id": "delivery_text",
       "label": "Delivery text prefix",
-      "default": "Recibe entre"
+      "default": "Arrives between"
+    },
+    {
+      "type": "text",
+      "id": "pre_order_delivery_text",
+      "label": "Pre-order delivery text",
+      "default": "Ships in 3-4 weeks"
     },
     {
       "type": "text",

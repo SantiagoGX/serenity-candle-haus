@@ -31,11 +31,11 @@
         "submit_label": "Send",
         "success_message": "¡Gracias por tu mensaje! Te responderemos pronto.",
         "contact_label": "Contact Us",
-        "email": "info@serenity.com",
+        "email": " info.s.candlehaus@gmail.com",
         "weekdays_label": "Monday - Friday",
-        "weekdays_hours": "10:00 am — 7:00 pm",
-        "saturday_label": "Saturday",
-        "saturday_hours": "10:00 am — 2:00 pm"
+        "weekdays_hours": "9:00 am — 5:00 pm",
+        "saturday_label": "",
+        "saturday_hours": ""
       }
     }
   },

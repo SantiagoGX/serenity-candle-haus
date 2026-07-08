@@ -1,0 +1,336 @@
+{% comment %} Lista de colecciones en grilla - Estilo similar a PLP {% endcomment %}
+
+{% assign collections_to_show = section.settings.collections_to_show | default: 12 %}
+{% if collections_to_show > 24 %}
+  {% assign collections_to_show = 24 %}
+{% endif %}
+
+<div class="list-collections-section" data-section-id="{{ section.id }}">
+  <div class="list-collections__header-container">
+    <div class="list-collections__header">
+      <h1 class="list-collections__title avigea-font">
+        {{ section.settings.title | default: 'COLLECTIONS' }}
+      </h1>
+      {% if section.settings.description != blank %}
+        <div class="list-collections__description helixa-font">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="list-collections__container">
+    <div class="list-collections__grid">
+      {% assign count = 0 %}
+      {% for collection in collections %}
+        {% if collection.handle != 'all' and collection.handle != 'frontpage' %}
+          {% if count >= collections_to_show %}
+            {% break %}
+          {% endif %}
+          {% assign count = count | plus: 1 %}
+
+          <div class="list-collections__item">
+            <div class="collection-card">
+              <div class="collection-card__image-wrapper">
+                <span class="collection-card__badge">
+                  {{ collection.all_products_count | default: 0 }} {{ section.settings.products_label | default: 'PRODUCTS' }}
+                </span>
+                <a href="{{ collection.url }}" class="collection-card__link" aria-label="View {{ collection.title | escape }}">
+                  {% if collection.image %}
+                    <img
+                      srcset="{%- if collection.image.width >= 375 -%}{{ collection.image | img_url: '375x' }} 375w,{%- endif -%}
+                              {%- if collection.image.width >= 550 -%}{{ collection.image | img_url: '550x' }} 550w,{%- endif -%}
+                              {%- if collection.image.width >= 750 -%}{{ collection.image | img_url: '750x' }} 750w,{%- endif -%}
+                              {{ collection.image | img_url: 'master' }} {{ collection.image.width }}w"
+                      src="{{ collection.image | img_url: '550x' }}"
+                      sizes="(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw"
+                      alt="{{ collection.image.alt | default: collection.title }}"
+                      loading="lazy"
+                      class="collection-card__image"
+                      width="{{ collection.image.width }}"
+                      height="{{ collection.image.height }}"
+                    >
+                  {% elsif collection.products.first.featured_image %}
+                    <img
+                      srcset="{%- if collection.products.first.featured_image.width >= 375 -%}{{ collection.products.first.featured_image | img_url: '375x' }} 375w,{%- endif -%}
+                              {%- if collection.products.first.featured_image.width >= 550 -%}{{ collection.products.first.featured_image | img_url: '550x' }} 550w,{%- endif -%}
+                              {%- if collection.products.first.featured_image.width >= 750 -%}{{ collection.products.first.featured_image | img_url: '750x' }} 750w,{%- endif -%}
+                              {{ collection.products.first.featured_image | img_url: 'master' }} {{ collection.products.first.featured_image.width }}w"
+                      src="{{ collection.products.first.featured_image | img_url: '550x' }}"
+                      sizes="(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw"
+                      alt="{{ collection.title }}"
+                      loading="lazy"
+                      class="collection-card__image"
+                      width="{{ collection.products.first.featured_image.width }}"
+                      height="{{ collection.products.first.featured_image.height }}"
+                    >
+                  {% else %}
+                    <div class="collection-card__placeholder">
+                      <span class="placeholder-number">{{ count }}</span>
+                    </div>
+                  {% endif %}
+                </a>
+              </div>
+              <div class="collection-card__info">
+                <div class="collection-card__meta">
+                  <h3 class="collection-card__name">{{ collection.title }}</h3>
+                </div>
+                <a href="{{ collection.url }}" class="collection-card__btn">
+                  {{ section.settings.button_text | default: 'VIEW' }}
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .list-collections-section {
+    padding: 140px 0;
+    background: #FDFBF5;
+  }
+
+  .list-collections__header-container {
+    max-width: 1512px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  .list-collections__header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .list-collections__header {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      text-align: center;
+    }
+  }
+
+  .list-collections__title {
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #6B550E;
+    text-transform: uppercase;
+    letter-spacing: -4px;
+    margin: 0;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .list-collections__description {
+    font-family: 'Helvetica World', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    color: #6D6C6C;
+    line-height: 1.6;
+    max-width: 500px;
+    margin-left: auto;
+  }
+
+  @media (max-width: 768px) {
+    .list-collections__description {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  .list-collections__container {
+    max-width: 1512px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .list-collections__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  @media (max-width: 990px) {
+    .list-collections__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 550px) {
+    .list-collections__grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+
+  .list-collections__item {
+    width: 100%;
+  }
+
+  /* Collection Card - Estilo idéntico a product-card-carousel */
+  .collection-card {
+    background: transparent;
+  }
+
+  .collection-card__image-wrapper {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: #e8e4d9;
+    overflow: hidden;
+  }
+
+  .collection-card__badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.95);
+    font-family: 'Helvetica World', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6B550E;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .collection-card__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .collection-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+
+  .collection-card:hover .collection-card__image {
+    transform: scale(1.05);
+  }
+
+  .collection-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e8e4d9 0%, #d4d0c5 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .placeholder-number {
+    font-family: 'Helvetica World', sans-serif;
+    font-size: 48px;
+    color: #6B550E;
+    opacity: 0.3;
+  }
+
+  .collection-card__info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    gap: 12px;
+  }
+
+  .collection-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .collection-card__name {
+    font-family: 'Helvetica World', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2C2C2C;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .collection-card__btn {
+    padding: 10px 20px;
+    background: #F0ECDF;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Helvetica World', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6B550E;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    min-width: 70px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .collection-card__btn:hover {
+    background: #6B550E;
+    color: #fff;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "List Collections",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "COLLECTIONS"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Descripción (opcional)"
+    },
+    {
+      "type": "range",
+      "id": "collections_to_show",
+      "label": "Colecciones a mostrar",
+      "min": 3,
+      "max": 24,
+      "step": 3,
+      "default": 12
+    },
+    {
+      "type": "text",
+      "id": "products_label",
+      "label": "Etiqueta de productos",
+      "default": "PRODUCTS"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto del botón",
+      "default": "VIEW"
+    }
+  ],
+  "presets": [
+    {
+      "name": "List Collections",
+      "settings": {
+        "collections_to_show": 12
+      }
+    }
+  ]
+}
+{% endschema %}

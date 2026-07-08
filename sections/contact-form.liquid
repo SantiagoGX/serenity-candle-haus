@@ -59,21 +59,41 @@
       </div>
 
       <div class="contact-form__info">
-        <div class="contact-form__info-item">
-          <span class="contact-form__info-label">{{ section.settings.contact_label | default: 'Contact Us' }}</span>
-          <a href="mailto:{{ section.settings.email | default: 'info@delevilie.com' }}" class="contact-form__info-value">
-            {{ section.settings.email | default: 'info@delevilie.com' }}
-          </a>
-        </div>
-        <div class="contact-form__info-item">
-          <span class="contact-form__info-label">{{ section.settings.weekdays_label | default: 'Monday - Friday' }}</span>
-          <span class="contact-form__info-value">{{ section.settings.weekdays_hours | default: '10:00 am — 7:00 pm' }}</span>
-        </div>
-        <div class="contact-form__info-item">
-          <span class="contact-form__info-label">{{ section.settings.saturday_label | default: 'Saturday' }}</span>
-          <span class="contact-form__info-value">{{ section.settings.saturday_hours | default: '10:00 am — 2:00 pm' }}</span>
-        </div>
-      </div>
+  {% if section.settings.email != blank or section.settings.contact_label != blank %}
+    <div class="contact-form__info-item">
+      {% if section.settings.contact_label != blank %}
+        <span class="contact-form__info-label">{{ section.settings.contact_label }}</span>
+      {% endif %}
+      {% if section.settings.email != blank %}
+        <a href="mailto:{{ section.settings.email }}" class="contact-form__info-value">
+          {{ section.settings.email }}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if section.settings.weekdays_label != blank or section.settings.weekdays_hours != blank %}
+    <div class="contact-form__info-item">
+      {% if section.settings.weekdays_label != blank %}
+        <span class="contact-form__info-label">{{ section.settings.weekdays_label }}</span>
+      {% endif %}
+      {% if section.settings.weekdays_hours != blank %}
+        <span class="contact-form__info-value">{{ section.settings.weekdays_hours }}</span>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if section.settings.saturday_label != blank or section.settings.saturday_hours != blank %}
+    <div class="contact-form__info-item">
+      {% if section.settings.saturday_label != blank %}
+        <span class="contact-form__info-label">{{ section.settings.saturday_label }}</span>
+      {% endif %}
+      {% if section.settings.saturday_hours != blank %}
+        <span class="contact-form__info-value">{{ section.settings.saturday_hours }}</span>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
     </div>
   </section>
 {% endform %}

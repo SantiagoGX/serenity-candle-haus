@@ -11,52 +11,26 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "blocks": {
-        "bundle_YDpinT": {
-          "type": "bundle",
-          "settings": {
-            "image": "shopify://shop_images/Frame_837.png",
-            "title": "Save 20% with the Serenity and Mediterranean bundle",
-            "product": "pedregal",
-            "variant_id": "",
-            "price": "35.00",
-            "compare_price": "45.00"
-          }
-        },
-        "bundle_qKxMUN": {
-          "type": "bundle",
-          "settings": {
-            "image": "shopify://shop_images/Frame_837.png",
-            "title": "Save 20% with the Serenity and Mediterranean bundle",
-            "product": "pedregal",
-            "variant_id": "",
-            "price": "35.00",
-            "compare_price": "45.00"
-          }
-        }
-      },
-      "block_order": [
-        "bundle_YDpinT",
-        "bundle_qKxMUN"
-      ],
       "settings": {
         "show_subtitle": true,
-        "subtitle": "More than a Scent. It's a Ritual.",
-        "show_delivery_date": true,
+        "subtitle": "",
+        "show_delivery_date": false,
         "delivery_min_days": 3,
         "delivery_max_days": 7,
         "delivery_text": "",
+        "pre_order_delivery_text": "Ships in 2 business days.",
         "shop_now_text": "SHOP NOW",
         "add_to_cart_text": "ADD TO CART",
         "show_accordions": true,
         "details_title": "Details",
-        "details_content": "",
+        "details_content": "<p>184 mL </p><p>natural reeds</p><p>lasts up to 2 -4 months</p><p>non toxic. no alcohol. </p>",
         "ingredients_title": "Ingredients",
-        "ingredients_content": ""
+        "ingredients_content": "<p>eco base, fragrance oil</p>"
       }
     },
     "testimonials_masonry_UJzxJn": {
       "type": "testimonials-masonry",
+      "disabled": true,
       "name": "Testimonials Masonry",
       "settings": {
         "background_color": "#f0ecdf",
@@ -71,6 +45,7 @@
     },
     "recommendations": {
       "type": "product-recommendations",
+      "disabled": true,
       "settings": {
         "title": "ALSO LIKE",
         "add_button_text": "ADD +"

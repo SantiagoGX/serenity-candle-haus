@@ -1,0 +1,503 @@
+{% comment %}
+  Sección Coming Soon - Landing full-page
+  Diseño alineado con el tema: Helvetica World, Helixa, #6B550E, fondos crema
+  Sin header ni footer cuando se usa con layout coming-soon
+{% endcomment %}
+
+{% liquid
+  assign has_image = false
+  assign has_video = false
+  if section.settings.background_type == 'image' and section.settings.background_image != blank
+    assign has_image = true
+  endif
+  if section.settings.background_type == 'video' and section.settings.background_video != blank
+    assign has_video = true
+  endif
+%}
+
+<div class="comixub" data-section-id="{{ section.id }}" style="{% if has_image %}background-image: url('{{ section.settings.background_image | image_url: width: 2000 }}');{% endif %}">
+  {% if has_video %}
+    <div class="comixub__video">
+      {{ section.settings.background_video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, image_size: '2000x' }}
+    </div>
+  {% endif %}
+  <div class="comixub__overlay" style="background-color: {{ section.settings.overlay_color }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+  
+  <div class="comixub__content">
+    {% if section.settings.logo != blank %}
+      <div class="comixub__logo" style="--logo-size: {{ section.settings.logo_size | default: 220 }}px;">
+        <img src="{{ section.settings.logo | image_url: width: 800 }}" alt="{{ section.settings.heading | escape }}" loading="eager" height="auto">
+      </div>
+    {% endif %}
+    
+    <h1 class="comixub__heading">{{ section.settings.heading }}</h1>
+    
+    {% if section.settings.show_divider %}
+      <div class="comixub__divider" style="{% if section.settings.divider_color != blank %}background: {{ section.settings.divider_color }};{% endif %}"></div>
+    {% endif %}
+    
+    <p class="comixub__subheading">{{ section.settings.subheading }}</p>
+    
+    <div class="comixub__form-wrapper">
+      {% form 'customer', class: 'comixub__form' %}
+        <input type="hidden" name="contact[tags]" value="coming-soon,newsletter,landing-coming-soon">
+        {% if form.posted_successfully? %}
+          <div class="comixub__success">
+            {{ section.settings.success_message | default: "Thank you! We'll notify you when it's available." }}
+          </div>
+        {% else %}
+          {% if form.errors %}
+            <div class="comixub__error">
+              {{ form.errors | default_errors }}
+            </div>
+          {% endif %}
+          <div class="comixub__input-row">
+            <input
+              type="email"
+              name="contact[email]"
+              class="comixub__input helixa-font comixub__input--{{ section.settings.placeholder_align | default: 'center' }}"
+              placeholder="{{ section.settings.placeholder | default: 'Enter your email' }}"
+              required
+              aria-label="Email"
+              autocomplete="email"
+            >
+            <button type="submit" class="comixub__btn" style="background-color: {{ section.settings.button_background_color | default: '#FFFFFF' }}; color: {{ section.settings.button_text_color | default: '#1a1a1a' }};">
+              {{ section.settings.button_text | default: 'NOTIFY ME' }}
+            </button>
+          </div>
+        {% endif %}
+      {% endform %}
+    </div>
+    
+    {% if section.settings.footer_text != blank %}
+      <p class="comixub__footer-text">{{ section.settings.footer_text }}</p>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .comixub {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: {{ section.settings.background_color | default: '#FDFCF8' }};
+    overflow: hidden;
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+
+  .comixub__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .comixub__video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .comixub__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .comixub__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .comixub__logo {
+    margin-bottom: 32px;
+  }
+
+  .comixub__logo img {
+    max-width: var(--logo-size, 220px);
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .comixub__heading {
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    color: {{ section.settings.heading_color | default: '#FFF3E8' }};
+    letter-spacing: 2px;
+    line-height: 1.1;
+    margin: 0 0 24px 0;
+    text-transform: none;
+  }
+
+  .comixub__divider {
+    width: 1px;
+    height: 60px;
+    background: {{ section.settings.divider_color | default: '#6B550E' }};
+    margin: 0 auto 28px;
+  }
+
+  .comixub__subheading {
+    font-family: var(--font-helixa), -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: {{ section.settings.subheading_size | default: 16 }}px;
+    color: {{ section.settings.subheading_color | default: '#6D6C6C' }};
+    line-height: 1.6;
+    margin: 0 0 36px 0;
+    font-weight: 400;
+  }
+
+  .comixub__form-wrapper {
+    margin-bottom: 24px;
+  }
+
+  .comixub__form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .comixub__input-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 550px) {
+    .comixub__input-row {
+      flex-direction: row;
+      align-items: stretch;
+    }
+
+    .comixub__input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .comixub__btn {
+      flex-shrink: 0;
+    }
+  }
+
+  .comixub__input {
+    width: 100%;
+    padding: 18px 24px;
+    border: 1px solid {{ section.settings.input_border_color | default: 'rgba(0, 0, 0, 0.15)' }};
+    border-radius: 1000px;
+    background: {{ section.settings.input_background_color | default: '#FFFFFF' }};
+    font-size: 15px;
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    color: {{ section.settings.input_text_color | default: '#2C2C2C' }};
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  .comixub__input::placeholder {
+    color: {{ section.settings.input_placeholder_color | default: '#888' }};
+  }
+
+  .comixub__input--left {
+    text-align: left;
+  }
+
+  .comixub__input--center {
+    text-align: center;
+  }
+
+  .comixub__input:focus {
+    border-color: {{ section.settings.input_border_color | default: 'rgba(0, 0, 0, 0.3)' }};
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .comixub__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 45px;
+    border: none;
+    border-radius: 1000px;
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .comixub__btn:hover {
+    filter: brightness(0.95);
+    transform: translateY(-2px);
+  }
+
+  .comixub__success {
+    background: rgba(255, 255, 255, 0.2);
+    color: {{ section.settings.heading_color | default: '#FFF3E8' }};
+    padding: 18px 24px;
+    border-radius: 8px;
+    font-family: var(--font-helixa), sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .comixub__error {
+    background: rgba(200, 60, 60, 0.1);
+    color: #c0392b;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-family: var(--font-helixa), sans-serif;
+    font-size: 14px;
+  }
+
+  .comixub__footer-text {
+    font-family: var(--font-helixa), sans-serif;
+    font-size: 13px;
+    color: {{ section.settings.footer_text_color | default: '#888' }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 550px) {
+    .comixub__btn {
+      padding: 15px 35px;
+      font-size: 12px;
+    }
+
+    .comixub {
+      padding: 32px 20px;
+    }
+
+    .comixub__logo img {
+      max-width: min(var(--logo-size, 220px), 100%);
+    }
+
+    .comixub__divider {
+      height: 50px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Coming Soon",
+  "tag": "section",
+  "class": "comixub-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo (optional)"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "Logo size",
+      "min": 80,
+      "max": 500,
+      "step": 10,
+      "default": 220,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "COMING SOON"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#FFF3E8"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Coming soon. Leave your email to be the first to know when it's available."
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading font size",
+      "min": 10,
+      "max": 36,
+      "step": 1,
+      "default": 16,
+      "unit": "px",
+      "info": "Size of the subheading text in pixels"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#6D6C6C"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show divider",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#6B550E"
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "select",
+      "id": "placeholder_align",
+      "label": "Placeholder alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "input_background_color",
+      "label": "Input background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input text color",
+      "default": "#2C2C2C"
+    },
+    {
+      "type": "color",
+      "id": "input_placeholder_color",
+      "label": "Input placeholder color",
+      "default": "#888888"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input border color",
+      "default": "rgba(0, 0, 0, 0.15)"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "NOTIFY ME"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you! We'll notify you when it's available."
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer text (optional)"
+    },
+    {
+      "type": "color",
+      "id": "footer_text_color",
+      "label": "Footer text color",
+      "default": "#888888"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "color", "label": "Color" },
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FDFCF8"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "video",
+      "id": "background_video",
+      "label": "Background video"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 0,
+      "unit": "%"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coming Soon"
+    }
+  ]
+}
+{% endschema %}

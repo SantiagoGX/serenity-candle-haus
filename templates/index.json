@@ -18,9 +18,9 @@
         "overlay_color": "#000000",
         "overlay_opacity": 45,
         "overlay_custom_css": "",
-        "heading": "SET THE VIBE",
-        "subheading": "Lorem ipsum dolor sit amet consectetur.",
-        "divider_color": "#ffffff99",
+        "heading": "SET THE VIBE.",
+        "subheading": "candles that speak to your soul.",
+        "divider_color": "#fdfcf8",
         "button_text": "SHOP NOW",
         "button_link": "shopify://collections/all"
       }
@@ -30,36 +30,78 @@
       "name": "Product Carousel",
       "settings": {
         "title": "CANDLES",
-        "subtitle": "Lorem ipsum dolor sit amet consectetur.",
-        "collection": "chocolate",
-        "products_to_show": 8
+        "subtitle": "soy + coconut wax candles",
+        "collection": "capsuse-1",
+        "products_to_show": 4
+      }
+    },
+    "product_carousel_JPX8fV": {
+      "type": "product-carousel",
+      "name": "Product Carousel",
+      "settings": {
+        "title": "REED DIFFUSERS",
+        "subtitle": "all natural reed diffusers",
+        "collection": "reed-diffusers",
+        "products_to_show": 4
       }
     },
     "featured_product_gKQ7VF": {
       "type": "featured-product",
+      "blocks": {
+        "feature_VCYFHQ": {
+          "type": "feature",
+          "settings": {
+            "icon": "✿",
+            "text": "natural soy coconut wax blend"
+          }
+        },
+        "feature_yDUWkL": {
+          "type": "feature",
+          "settings": {
+            "icon": "✿",
+            "text": "phthalate free"
+          }
+        },
+        "feature_axdk4B": {
+          "type": "feature",
+          "settings": {
+            "icon": "✿",
+            "text": "8.5 oz - burn time 30 hours"
+          }
+        }
+      },
+      "block_order": [
+        "feature_VCYFHQ",
+        "feature_yDUWkL",
+        "feature_axdk4B"
+      ],
       "name": "Featured Product Custom",
       "settings": {
-        "product": "",
-        "background_color": "#fdfbf5",
+        "product": "love-jones-candle",
+        "background_color": "#fdfcf8",
         "color_scheme": "default",
-        "media_height": 700,
-        "media_type": "video",
-        "video": "shopify://files/videos/From KlickPin CF Velas artesanales para una decoración acogedora.mp4",
+        "media_height": 520,
+        "media_type": "image",
+        "image": "shopify://shop_images/IMG_0548.heic",
         "show_badge": true,
         "badge_text": "NEW",
-        "heading": "CUTE CANDLE",
-        "tagline": "More than a Scent. It's a Ritual.",
-        "description": "<p>Lorem ipsum dolor sit amet consectetur. Tellus dignissim eu a odio. Nisl tristique nunc et nibh aliquet et elementum enim in.</p><p>Lorem ipsum dolor sit amet consectetur. Tellus dignissim eu a odio.</p>",
-        "compare_price": "$45.00",
-        "price": "$35.00",
-        "button_text": "VIEW PRODUCT",
-        "secondary_button_text": "VIEW PRODUCT",
+        "heading": "LOVE JONES",
+        "tagline": "sweet like love.",
+        "description": "<p>black cherry. amber. speakeasy</p>",
+        "compare_price": "",
+        "price": "",
+        "button_text": "add to cart",
+        "secondary_button_text": "",
         "button_url": "",
         "show_variant_selector": false,
+        "variant_label_text": "Select Size:",
+        "out_of_stock_text": "SOLD OUT",
+        "secondary_button_url": "",
         "show_trust_badges": false,
         "trust_icon_1": "✓",
         "trust_text_1": "100% Natural Ingredients",
-        "show_shipping_info": false
+        "show_shipping_info": false,
+        "shipping_text": "🚚 Free shipping on orders over $50"
       }
     },
     "scrolling_gallery_FRCiBi": {
@@ -88,107 +130,45 @@
           "settings": {
             "image": "shopify://shop_images/image_3.png"
           }
-        },
-        "image_dmAd4j": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/image_4.png"
-          }
         }
       },
       "block_order": [
         "image_Lz4ncy",
         "image_wWQYyi",
         "image_c3xdMe",
-        "image_TEVVNh",
-        "image_dmAd4j"
+        "image_TEVVNh"
       ],
+      "disabled": true,
+      "custom_css": [],
       "name": "Scroll Gallery",
       "settings": {
-        "pre_title": "SERENITY",
-        "line_1": "THE SANCTUARY",
-        "line_2": "FOR YOUR SOUL",
-        "sub_text": "Lorem ipsum dolor sit amet consectetur."
+        "pre_title": "SERENITY. CANDLE HAUS",
+        "line_1": "",
+        "line_2": "",
+        "supportive_text": ""
       }
     },
     "about_banner_W3daaV": {
       "type": "about-banner",
       "name": "About Banner",
       "settings": {
-        "background_image": "shopify://shop_images/Frame_837.png",
+        "background_image": "shopify://shop_images/PROMO_SHOT_2.png",
         "overlay_color": "#000000",
-        "overlay_opacity": 10,
-        "title": "ABOUT ME",
-        "description": "Lorem ipsum dolor sit amet consectetur. Tellus dignissim eu a odio. Nisl tristique nunc et nibh aliquet et elementum enim in."
+        "overlay_opacity": 35,
+        "title": "ABOUT US",
+        "description": "Serenity Candle Haus began as a passion project fueled by a desire to stay creative. Our candles are inspired by intentional moments and thoughtfully crafted to bring warmth, comfort, and a sense of serenity into every space.\n\nHand-poured with a premium soy-coconut wax blend and phthalate-free fragrances, each candle is designed to help you slow down, unwind, and create a vibe that feels uniquely yours.\n\n\nLight the candle. Set the mood. Create the vibe."
       }
     },
     "testimonials_masonry_GyL6jr": {
       "type": "testimonials-masonry",
-      "blocks": {
-        "testimonial_kqNKXA": {
-          "type": "testimonial",
-          "settings": {
-            "title": "¡Por fin encontré la app de finanzas perfecta!",
-            "text": "He probado muchas aplicaciones de finanzas personales...",
-            "author": "María"
-          }
-        },
-        "testimonial_zVwTwx": {
-          "type": "testimonial",
-          "settings": {
-            "title": "¡Por fin encontré la app de finanzas perfecta!",
-            "text": "He probado muchas aplicaciones de finanzas personales...",
-            "author": "María"
-          }
-        },
-        "testimonial_TY9nta": {
-          "type": "testimonial",
-          "settings": {
-            "title": "¡Por fin encontré la app de finanzas perfecta!",
-            "text": "He probado muchas aplicaciones de finanzas personales...faserrereqreweqrerwetwtwrtwtwtrwtwr He probado muchas aplicaciones de finanzas personales...faserrereqreweqrerwetwtwrtwtwtrwtwrHe probado muchas aplicaciones de finanzas personales...faserrereqreweqrerwetwtwrtwtwtrwtwr",
-            "author": "María"
-          }
-        },
-        "testimonial_MkExUA": {
-          "type": "testimonial",
-          "settings": {
-            "title": "¡Por fin encontré la app de finanzas perfecta!",
-            "text": "He probado muchas aplicaciones de finanzas personales...",
-            "author": "María"
-          }
-        },
-        "testimonial_djtGgr": {
-          "type": "testimonial",
-          "settings": {
-            "title": "¡Por fin encontré la app de finanzas perfecta!",
-            "text": "He probado muchas aplicaciones de finanzas personales...",
-            "author": "María"
-          }
-        },
-        "testimonial_JdJtFi": {
-          "type": "testimonial",
-          "settings": {
-            "title": "¡Por fin encontré la app de finanzas perfecta!",
-            "text": "He probado muchas aplicaciones de finanzas personales...",
-            "author": "María"
-          }
-        }
-      },
-      "block_order": [
-        "testimonial_kqNKXA",
-        "testimonial_zVwTwx",
-        "testimonial_TY9nta",
-        "testimonial_MkExUA",
-        "testimonial_djtGgr",
-        "testimonial_JdJtFi"
-      ],
+      "disabled": true,
       "name": "Testimonials Masonry",
       "settings": {
         "background_color": "#fdfbf5",
-        "title": "OUR CLIENTS SAYS",
-        "subtitle": "Únete a miles de personas que han transformado su ecommerce con Convert",
+        "title": "REVIEWS",
+        "subtitle": "",
         "rating": "4.8",
-        "rating_text": "Average rating from over 8,500+ reviews and.",
+        "rating_text": "",
         "rating_image_height": 50,
         "laurel_height": 30
       }
@@ -197,6 +177,7 @@
   "order": [
     "hero_banner_bR3Tp9",
     "product_carousel_TB747N",
+    "product_carousel_JPX8fV",
     "featured_product_gKQ7VF",
     "scrolling_gallery_FRCiBi",
     "about_banner_W3daaV",

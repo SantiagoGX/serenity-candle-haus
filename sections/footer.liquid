@@ -9,45 +9,26 @@
     {% comment %} Links principales {% endcomment %}
     <div class="footer-grid">
       
-      {% comment %} SHOP {% endcomment %}
-      <div class="footer-column">
-        <h3 class="footer-heading helixa-font">SHOP</h3>
-        <ul class="footer-links">
-          <li><a href="{{ routes.collections_url }}/rings" class="footer-link helixa-font">Rings</a></li>
-          <li><a href="{{ routes.collections_url }}/bags" class="footer-link helixa-font">Bags</a></li>
-          <li><a href="{{ routes.collections_url }}/accesories" class="footer-link helixa-font">Accesories</a></li>
-        </ul>
-      </div>
-
-      {% comment %} COMPANY {% endcomment %}
-      <div class="footer-column">
-        <h3 class="footer-heading helixa-font">COMPANY</h3>
-        <ul class="footer-links">
-          <li><a href="/pages/about-us" class="footer-link helixa-font">About Us</a></li>
-          <li><a href="/pages/faqs" class="footer-link helixa-font">Faqs</a></li>
-          <li><a href="/blogs/news" class="footer-link helixa-font">Latest News</a></li>
-        </ul>
-      </div>
-
-      {% comment %} LEGALS {% endcomment %}
-      <div class="footer-column footer-column--wide">
-        <h3 class="footer-heading helixa-font">LEGALS</h3>
-        <ul class="footer-links">
-          <li><a href="/pages/reservas-viajes" class="footer-link helixa-font">Reservas y Cancelación de Viajes</a></li>
-          <li><a href="/pages/reservas-formaciones" class="footer-link helixa-font">Reservas y Cancelación de Formaciones</a></li>
-          <li><a href="{{ routes.sitemap_url }}" class="footer-link helixa-font">Mapa del sitio</a></li>
-        </ul>
-      </div>
-
-      {% comment %} HELP {% endcomment %}
-      <div class="footer-column">
-        <h3 class="footer-heading helixa-font">HELP</h3>
-        <ul class="footer-links">
-          <li><a href="/pages/contact" class="footer-link helixa-font">Contact</a></li>
-          <li><a href="/pages/product-care" class="footer-link helixa-font">Product Care</a></li>
-          <li><a href="/pages/refunds" class="footer-link helixa-font">Refunds and Cancels</a></li>
-        </ul>
-      </div>
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'menu' -%}
+            <div class="footer-column" {{ block.shopify_attributes }}>
+              {%- if block.settings.menu != blank -%}
+                <h3 class="footer-heading helixa-font">{{ block.settings.heading | default: linklists[block.settings.menu].title }}</h3>
+                <ul class="footer-links">
+                  {%- for link in linklists[block.settings.menu].links -%}
+                    <li><a href="{{ link.url }}" class="footer-link helixa-font">{{ link.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <h3 class="footer-heading helixa-font">{{ block.settings.heading | default: 'Menu' }}</h3>
+                <ul class="footer-links">
+                  <li><a href="#" class="footer-link helixa-font">Select a menu</a></li>
+                </ul>
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
 
       {% comment %} NEWSLETTER {% endcomment %}
       <div class="footer-column footer-newsletter">
@@ -78,9 +59,9 @@
     {% comment %} Barra inferior {% endcomment %}
     <div class="footer-bottom">
       <div class="footer-credits">
-        <span class="credits-text helixa-font">Crafted with love by</span>
+        <span class="credits-text helixa-font">{{ section.settings.agency_text | default: 'Crafted with love by' }}</span>
         <span class="credits-line"></span>
-        <span class="credits-brand helixa-font">SNC Designs</span>
+        <a href="{{ section.settings.agency_url | default: 'https://snc-designs.com/' }}" class="credits-brand helixa-font" style="text-decoration: none; color: inherit;" target="_blank">{{ section.settings.agency_brand | default: 'SNC Designs' }}</a>
       </div>
       
       <div class="footer-brand">
@@ -400,6 +381,46 @@
         }
       ],
       "default": "default"
+    },
+    {
+      "type": "header",
+      "content": "Agency Branding"
+    },
+    {
+      "type": "text",
+      "id": "agency_text",
+      "label": "Agency Prefix Text",
+      "default": "Crafted with love by"
+    },
+    {
+      "type": "text",
+      "id": "agency_brand",
+      "label": "Agency Brand Name",
+      "default": "SNC Designs"
+    },
+    {
+      "type": "url",
+      "id": "agency_url",
+      "label": "Agency URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "info": "Leave blank to use linklist title"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
     }
   ],
   "presets": [
