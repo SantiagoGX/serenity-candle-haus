@@ -74,7 +74,7 @@
 <style>
   .product-recommendations {
     padding: 80px 24px;
-    background: #FDFBF5;
+    background: var(--color-bg);
   }
 
   .product-recommendations__container {
@@ -85,7 +85,7 @@
   .product-recommendations__title {
     font-family: var(--font-helvetica-world);
     font-size: clamp(32px, 5vw, 48px);
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-fg);
     text-transform: uppercase;
     letter-spacing: -4px;
     text-align: center;
@@ -119,7 +119,7 @@
   .product-card-carousel__image-wrapper {
     position: relative;
     aspect-ratio: 4 / 5;
-    background: #e8e4d9;
+    background: var(--color-border);
     overflow: hidden;
     border-radius: 4px;
   }
@@ -136,7 +136,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-accent);
     border-radius: 2px;
   }
 
@@ -154,12 +154,12 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-accent);
     transition: all 0.3s ease;
   }
 
   .product-card-carousel__wishlist:hover {
-    background: var(--color-title-dark, #6B550E);
+    background: var(--color-accent-solid);
     color: #fff;
   }
 
@@ -187,7 +187,7 @@
   .product-card-carousel__placeholder {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #e8e4d9 0%, #d4d0c5 100%);
+    background: var(--color-border);
   }
 
   .product-card-carousel__info {
@@ -207,35 +207,35 @@
     font-family: var(--font-helvetica-world);
     font-size: 15px;
     font-weight: 500;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-fg);
     margin: 0;
   }
 
   .product-card-carousel__price {
     font-family: var(--font-helixa);
     font-size: 14px;
-    color: var(--color-paragraph-dark, #6D6C6C);
+    color: var(--color-accent);
   }
 
   .product-card-carousel__add-btn {
     padding: 10px 20px;
-    background: #fff;
-    border: 1px solid rgba(107, 85, 14, 0.15);
+    background: var(--color-bg);
+    border: 1px solid var(--color-accent);
     border-radius: 6px;
     font-family: var(--font-helvetica-world);
     font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-accent);
     cursor: pointer;
     transition: all 0.3s ease;
   }
 
   .product-card-carousel__add-btn:hover {
-    background: var(--color-title-dark, #6B550E);
+    background: var(--color-accent-solid);
     color: #fff;
-    border-color: var(--color-title-dark, #6B550E);
+    border-color: var(--color-accent-solid);
   }
 </style>
 

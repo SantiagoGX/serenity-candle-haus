@@ -45,7 +45,7 @@
   .scroll-gallery {
     position: relative;
     height: 300vh;
-    background: var(--bg-primary, #F0ECDF);
+    background: var(--color-bg);
   }
   
   .scroll-gallery__sticky {
@@ -75,31 +75,31 @@
     font-family: var(--font-helvetica-world);
     font-size: 14px;
     font-weight: 500;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-accent);
     text-transform: uppercase;
     letter-spacing: 4px;
     margin-bottom: 8px;
     opacity: 0.8;
   }
-  
+
   .scroll-gallery__line {
     display: block;
     font-family: var(--font-helvetica-world);
     font-size: clamp(40px, 8vw, 100px);
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-fg);
     text-transform: uppercase;
     line-height: 1.05;
     letter-spacing: -4px;
   }
-  
+
   .scroll-gallery__line--italic {
     font-style: italic;
   }
-  
+
   .scroll-gallery__sub-text {
     font-family: var(--font-helixa);
     font-size: 14px;
-    color: var(--color-paragraph-dark, #6D6C6C);
+    color: var(--color-fg-muted);
     margin-top: 16px;
     font-weight: 400;
   }
@@ -136,7 +136,7 @@
   .scroll-gallery__placeholder {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #6B550E 0%, #8B7355 50%, #4A3A0A 100%);
+    background: var(--color-border);
   }
   
   @media (max-width: 768px) {
