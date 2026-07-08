@@ -9,8 +9,8 @@
  */
 {
   "current": {
-    "background_color": "#fdfbf5",
-    "foreground_color": "#333333",
+    "background_color": "#ffffff",
+    "foreground_color": "#111111",
     "content_for_index": []
   }
 }
