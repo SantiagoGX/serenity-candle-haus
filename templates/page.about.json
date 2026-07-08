@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "about_editorial": {
+      "type": "about-editorial",
+      "settings": {
+        "eyebrow": "Our Story",
+        "title": "About Us"
+      }
+    }
+  },
+  "order": [
+    "about_editorial"
+  ]
+}

@@ -1,0 +1,137 @@
+{% liquid
+  assign alt_text = section.settings.image.alt | default: section.settings.title | escape
+%}
+<section class="about-editorial" data-section-id="{{ section.id }}">
+  <div class="about-editorial__media">
+    {% if section.settings.image != blank %}
+      {{ section.settings.image | image_url: width: 1400 | image_tag:
+        loading: 'lazy',
+        class: 'about-editorial__image',
+        alt: alt_text
+      }}
+    {% endif %}
+  </div>
+  <div class="about-editorial__content">
+    {% if section.settings.eyebrow != blank %}
+      <p class="about-editorial__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="about-editorial__title">{{ section.settings.title | default: 'Our Story' }}</h1>
+    <div class="about-editorial__body">
+      {{ section.settings.body }}
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-editorial {
+    background: var(--color-bg);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .about-editorial__media {
+    width: 100%;
+  }
+
+  .about-editorial__image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .about-editorial__content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+
+  .about-editorial__eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+
+  .about-editorial__title {
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: 40px;
+    color: var(--color-fg);
+    margin: 0 0 32px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .about-editorial__body {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--color-fg-muted);
+  }
+
+  .about-editorial__body p {
+    margin: 0 0 24px;
+  }
+
+  @media (min-width: 900px) {
+    .about-editorial {
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+    }
+
+    .about-editorial__media,
+    .about-editorial__content {
+      height: 100%;
+    }
+
+    .about-editorial__content {
+      padding: 96px 64px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .about-editorial__image {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "About Editorial",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Our Story"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Our Story"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>Serenity Candle Haus began as a passion project fueled by a desire to stay creative. Our candles are inspired by intentional moments and thoughtfully crafted to bring warmth, comfort, and a sense of serenity into every space.</p><p>Hand-poured with a premium soy-coconut wax blend and phthalate-free fragrances, each candle is designed to help you slow down, unwind, and create a vibe that feels uniquely yours.</p><p>Light the candle. Set the mood. Create the vibe.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Editorial"
+    }
+  ]
+}
+{% endschema %}
