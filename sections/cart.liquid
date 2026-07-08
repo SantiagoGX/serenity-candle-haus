@@ -113,7 +113,7 @@
 <style>
   .cart-section {
     padding: 120px 24px 100px;
-    background: #FDFBF5;
+    background: var(--color-bg);
     min-height: 60vh;
   }
 
@@ -125,7 +125,7 @@
   .cart__title {
     font-family: var(--font-helvetica-world);
     font-size: clamp(32px, 5vw, 48px);
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-fg);
     text-transform: uppercase;
     margin: 0 0 40px 0;
     letter-spacing: -4px;
@@ -185,7 +185,7 @@
   .cart__item-placeholder {
     width: 100%;
     aspect-ratio: 1;
-    background: linear-gradient(135deg, #e8e4d9 0%, #d4d0c5 100%);
+    background: var(--color-border);
     border-radius: 4px;
   }
 
@@ -199,7 +199,7 @@
     font-family: var(--font-helvetica-world);
     font-size: 16px;
     font-weight: 500;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-fg);
     text-decoration: none;
     transition: opacity 0.3s ease;
   }
@@ -211,14 +211,14 @@
   .cart__item-variant {
     font-family: var(--font-helixa);
     font-size: 13px;
-    color: var(--color-paragraph-dark, #6D6C6C);
+    color: var(--color-fg-muted);
     margin: 0;
   }
 
   .cart__item-price {
     font-family: var(--font-helixa);
     font-size: 14px;
-    color: #999;
+    color: var(--color-fg-muted);
   }
 
   .cart__item-actions {
@@ -230,7 +230,7 @@
   .cart__item-quantity {
     display: flex;
     align-items: center;
-    border: 1px solid rgba(107, 85, 14, 0.15);
+    border: 1px solid var(--color-accent-a15);
     border-radius: 6px;
     overflow: hidden;
   }
@@ -242,30 +242,30 @@
     border: none;
     font-family: var(--font-helixa);
     font-size: 16px;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-accent);
     cursor: pointer;
     transition: background 0.3s ease;
   }
 
   .cart__qty-btn:hover {
-    background: #F0ECDF;
+    background: var(--color-accent-a10);
   }
 
   .cart__qty-input {
     width: 50px;
     height: 36px;
     border: none;
-    border-left: 1px solid rgba(107, 85, 14, 0.15);
-    border-right: 1px solid rgba(107, 85, 14, 0.15);
+    border-left: 1px solid var(--color-accent-a15);
+    border-right: 1px solid var(--color-accent-a15);
     text-align: center;
     font-family: var(--font-helixa);
     font-size: 14px;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-fg);
     outline: none;
   }
 
   .cart__item-remove {
-    color: #999;
+    color: var(--color-fg-muted);
     transition: color 0.3s ease;
   }
 
@@ -277,7 +277,7 @@
     font-family: var(--font-helvetica-world);
     font-size: 16px;
     font-weight: 500;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-accent);
     text-align: right;
     min-width: 80px;
   }
@@ -304,7 +304,7 @@
     font-family: var(--font-helvetica-world);
     font-size: 13px;
     font-weight: 500;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-accent);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -313,18 +313,18 @@
     width: 100%;
     min-height: 120px;
     padding: 16px;
-    border: 1px solid rgba(107, 85, 14, 0.15);
+    border: 1px solid var(--color-accent-a15);
     border-radius: 8px;
     background: #fff;
     font-family: var(--font-helvetica-world);
     font-size: 14px;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-fg);
     resize: vertical;
     outline: none;
   }
 
   .cart__note:focus {
-    border-color: rgba(107, 85, 14, 0.4);
+    border-color: var(--color-accent-a40);
   }
 
   .cart__summary {
@@ -342,33 +342,33 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(107, 85, 14, 0.1);
+    border-bottom: 1px solid var(--color-accent-a10);
   }
 
   .cart__subtotal-label {
     font-family: var(--font-helvetica-world);
     font-size: 16px;
     font-weight: 500;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-fg);
   }
 
   .cart__subtotal-value {
     font-family: var(--font-helvetica-world);
     font-size: 24px;
     font-weight: 600;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-accent);
   }
 
   .cart__shipping-note {
     font-family: var(--font-helvetica-world);
     font-size: 13px;
-    color: var(--color-paragraph-dark, #6D6C6C);
+    color: var(--color-fg-muted);
     margin: 0;
   }
 
   .cart__checkout-btn {
     padding: 18px 32px;
-    background: var(--color-title-dark, #6B550E);
+    background: var(--color-accent-solid);
     color: #fff;
     border: none;
     border-radius: 1000px;
@@ -382,7 +382,7 @@
   }
 
   .cart__checkout-btn:hover {
-    background: #5a480c;
+    background: var(--color-accent-active);
     transform: translateY(-2px);
   }
 
@@ -390,13 +390,13 @@
     text-align: center;
     font-family: var(--font-helvetica-world);
     font-size: 13px;
-    color: var(--color-paragraph-dark, #6D6C6C);
+    color: var(--color-fg-muted);
     text-decoration: none;
     transition: color 0.3s ease;
   }
 
   .cart__continue:hover {
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-accent);
   }
 
   /* Empty Cart */
@@ -406,7 +406,7 @@
   }
 
   .cart__empty-icon {
-    color: rgba(107, 85, 14, 0.3);
+    color: var(--color-accent-a30);
     margin-bottom: 24px;
   }
 
@@ -414,21 +414,21 @@
     font-family: var(--font-helvetica-world);
     font-size: 24px;
     font-weight: 500;
-    color: var(--color-title-dark, #6B550E);
+    color: var(--color-fg);
     margin: 0 0 12px 0;
   }
 
   .cart__empty-text {
     font-family: var(--font-helvetica-world);
     font-size: 15px;
-    color: var(--color-paragraph-dark, #6D6C6C);
+    color: var(--color-fg-muted);
     margin: 0 0 32px 0;
   }
 
   .cart__empty-btn {
     display: inline-block;
     padding: 16px 40px;
-    background: var(--color-title-dark, #6B550E);
+    background: var(--color-accent-solid);
     color: #fff;
     border-radius: 1000px;
     font-family: var(--font-helvetica-world);
@@ -441,7 +441,7 @@
   }
 
   .cart__empty-btn:hover {
-    background: #5a480c;
+    background: var(--color-accent-active);
     transform: translateY(-2px);
   }
 </style>

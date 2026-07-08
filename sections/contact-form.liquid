@@ -101,7 +101,7 @@
 <style>
   .contact-form-section {
     padding: 80px 24px;
-    background: #FAFAF8;
+    background: var(--color-bg);
   }
 
   .contact-form__container {
@@ -118,7 +118,7 @@
     font-family: var(--font-helvetica-world);
     font-size: clamp(36px, 5vw, 52px);
     font-weight: 700;
-    color: #1a1a1a;
+    color: var(--color-fg);
     margin: 0 0 16px 0;
     text-transform: uppercase;
     letter-spacing: -4px;
@@ -127,7 +127,7 @@
   .contact-form__subtitle {
     font-family: var(--font-helvetica-world);
     font-size: 15px;
-    color: #666;
+    color: var(--color-fg-muted);
     line-height: 1.6;
     margin: 0;
     max-width: 480px;
@@ -166,7 +166,7 @@
     font-family: var(--font-helvetica-world);
     font-size: 13px;
     font-weight: 500;
-    color: #1a1a1a;
+    color: var(--color-fg);
     margin-bottom: 8px;
   }
 
@@ -174,19 +174,19 @@
   .contact-form__textarea {
     width: 100%;
     padding: 16px;
-    background: #F5F5F3;
+    background: var(--color-border);
     border: none;
     border-radius: 8px;
     font-family: var(--font-helvetica-world);
     font-size: 14px;
-    color: #1a1a1a;
+    color: var(--color-fg);
     outline: none;
     transition: background 0.3s ease;
   }
 
   .contact-form__input:focus,
   .contact-form__textarea:focus {
-    background: #eeeeec;
+    background: var(--color-accent-a10);
   }
 
   .contact-form__textarea {
@@ -202,7 +202,7 @@
 
   .contact-form__submit {
     padding: 14px 48px;
-    background: #6B550E;
+    background: var(--color-accent-solid);
     color: #fff;
     border: none;
     border-radius: 100px;
@@ -214,7 +214,7 @@
   }
 
   .contact-form__submit:hover {
-    background: #5a480c;
+    background: var(--color-accent-active);
     transform: translateY(-2px);
   }
 
@@ -223,7 +223,7 @@
     justify-content: center;
     gap: 48px;
     padding: 32px;
-    background: #F5F5F3;
+    background: var(--color-border);
     border-radius: 12px;
     flex-wrap: wrap;
   }
@@ -236,7 +236,7 @@
     display: block;
     font-family: var(--font-helvetica-world);
     font-size: 12px;
-    color: #888;
+    color: var(--color-fg-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 8px;
@@ -245,13 +245,13 @@
   .contact-form__info-value {
     font-family: var(--font-helixa);
     font-size: 15px;
-    color: #1a1a1a;
+    color: var(--color-fg);
     font-weight: 500;
     text-decoration: none;
   }
 
   .contact-form__info-value:hover {
-    color: #6B550E;
+    color: var(--color-accent);
   }
 
   @media (max-width: 768px) {
