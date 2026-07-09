@@ -33,7 +33,9 @@
               <span class="testimonials__rating-number">{{ section.settings.rating | default: '4.8' }}</span>
               <span class="testimonials__stars">★★★★★</span>
             </div>
-            <p class="testimonials__rating-text">{{ section.settings.rating_text | default: 'Average rating from over 8,500+ reviews and.' }}</p>
+            {% if section.settings.rating_text != blank %}
+              <p class="testimonials__rating-text">{{ section.settings.rating_text }}</p>
+            {% endif %}
           </div>
         {% endif %}
         
@@ -50,8 +52,9 @@
 
     <div class="testimonials__grid" data-testimonials-grid>
       {% for block in testimonials limit: initial_limit %}
+        {% assign star_count = block.settings.rating | default: 5 %}
         <div class="testimonial-card" data-index="{{ forloop.index }}" {{ block.shopify_attributes }}>
-          <div class="testimonial-card__stars">★★★★★</div>
+          <div class="testimonial-card__stars">{% for s in (1..5) %}{% if s <= star_count %}★{% else %}☆{% endif %}{% endfor %}</div>
           <h3 class="testimonial-card__title">{{ block.settings.title | default: '¡Por fin encontré la app de finanzas perfecta!' }}</h3>
           <p class="testimonial-card__text">{{ block.settings.text | default: 'He probado muchas aplicaciones de finanzas personales...' }}</p>
           <span class="testimonial-card__author">{{ block.settings.author | default: 'María' }}</span>
@@ -73,8 +76,9 @@
     {% if total_testimonials > initial_limit %}
       <div class="testimonials__more" data-testimonials-more style="display: none;">
         {% for block in testimonials offset: initial_limit %}
+          {% assign star_count = block.settings.rating | default: 5 %}
           <div class="testimonial-card" {{ block.shopify_attributes }}>
-            <div class="testimonial-card__stars">★★★★★</div>
+            <div class="testimonial-card__stars">{% for s in (1..5) %}{% if s <= star_count %}★{% else %}☆{% endif %}{% endfor %}</div>
             <h3 class="testimonial-card__title">{{ block.settings.title | default: '¡Por fin encontré la app de finanzas perfecta!' }}</h3>
             <p class="testimonial-card__text">{{ block.settings.text }}</p>
             <span class="testimonial-card__author">{{ block.settings.author | default: 'María' }}</span>
@@ -374,7 +378,7 @@
       "type": "text",
       "id": "rating_text",
       "label": "Rating text",
-      "default": "Average rating from over 8,500+ reviews and."
+      "default": "Based on real customer reviews"
     },
     {
       "type": "header",
@@ -442,6 +446,17 @@
           "id": "author",
           "label": "Author name",
           "default": "María"
+        },
+        {
+          "type": "select",
+          "id": "rating",
+          "label": "Rating",
+          "options": [
+            { "value": "5", "label": "5 stars" },
+            { "value": "4", "label": "4 stars" },
+            { "value": "3", "label": "3 stars" }
+          ],
+          "default": "5"
         }
       ]
     }

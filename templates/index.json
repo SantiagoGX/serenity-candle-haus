@@ -161,17 +161,68 @@
     "testimonials_masonry_GyL6jr": {
       "type": "testimonials-masonry",
       "blocks": {
-        "testimonial_nqw6qn": {
+        "testimonial_r1": {
           "type": "testimonial",
           "settings": {
-            "title": "test",
-            "text": "test",
-            "author": ""
+            "title": "My new go to gift",
+            "text": "I bought the Love Jones candle for a friend's birthday and ended up ordering myself one too. The black cherry and amber combo is so cozy, and it fills the whole room without being overwhelming.",
+            "author": "Jessica M.",
+            "rating": "5"
+          }
+        },
+        "testimonial_r2": {
+          "type": "testimonial",
+          "settings": {
+            "title": "Burns clean and lasts",
+            "text": "Cabo Nights has been on my desk for almost a month now and it still smells amazing every time I light it. Soy coconut wax really does burn slower than the candles I used to buy.",
+            "author": "Marcus T.",
+            "rating": "5"
+          }
+        },
+        "testimonial_r3": {
+          "type": "testimonial",
+          "settings": {
+            "title": "Great scent, wish it lasted longer",
+            "text": "The Saffron Grove reed diffuser smells incredible when it's fresh, warm and a little spicy. My only complaint is that the throw got noticeably weaker after about three weeks.",
+            "author": "Priya K.",
+            "rating": "4"
+          }
+        },
+        "testimonial_r4": {
+          "type": "testimonial",
+          "settings": {
+            "title": "Perfect for a small apartment",
+            "text": "I was worried the reed diffuser would be too strong for my studio but it's actually just right. Not overpowering at all, just a nice ambient scent when I walk in the door.",
+            "author": "Daniel O.",
+            "rating": "4"
+          }
+        },
+        "testimonial_r5": {
+          "type": "testimonial",
+          "settings": {
+            "title": "The Trio is worth it",
+            "text": "Got the Trio set as a treat for myself and I'm so glad I did. Saffron Grove, Love Jones and Cabo Nights all smell completely different but somehow work together on the same shelf.",
+            "author": "Alexis R.",
+            "rating": "5"
+          }
+        },
+        "testimonial_r6": {
+          "type": "testimonial",
+          "settings": {
+            "title": "Ordering again",
+            "text": "This is my second order from Serenity and it won't be my last. The candles smell like something from a boutique store, not a big box aisle, and they actually look nice enough to leave out.",
+            "author": "Sam W.",
+            "rating": "5"
           }
         }
       },
       "block_order": [
-        "testimonial_nqw6qn"
+        "testimonial_r1",
+        "testimonial_r2",
+        "testimonial_r3",
+        "testimonial_r4",
+        "testimonial_r5",
+        "testimonial_r6"
       ],
       "name": "Testimonials Masonry",
       "settings": {
@@ -179,7 +230,7 @@
         "title": "REVIEWS",
         "subtitle": "",
         "rating": "4.8",
-        "rating_text": "",
+        "rating_text": "Based on real customer reviews",
         "rating_image_height": 50,
         "laurel_height": 30
       }
