@@ -5,15 +5,191 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/404
 {% endcomment %}
 
-<h1>{{ '404.title' | t }}</h1>
+<section class="error-404" data-error-404>
+  <div class="error-404__parallax" data-error-404-parallax>
+    <div class="error-404__digits">
+      <span class="error-404__digit">4</span>
+      <span class="error-404__flame" aria-hidden="true">
+        <svg viewBox="0 0 64 96" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M32 2C22 18 12 30 12 50C12 68.2 20.5 80 32 80C43.5 80 52 68.2 52 50C52 30 42 18 32 2Z"
+            fill="var(--color-accent)"
+          />
+          <path
+            class="error-404__flame-inner"
+            d="M32 34C27 42 23 49 23 58C23 66.8 26.8 73 32 73C37.2 73 41 66.8 41 58C41 49 36 42 32 34Z"
+            fill="#FFFFFF"
+            opacity="0.85"
+          />
+        </svg>
+      </span>
+      <span class="error-404__digit">4</span>
+    </div>
 
-<p>
-  {{ '404.not_found' | t }}
-</p>
+    <h1 class="error-404__title">Looks like this scent burned out.</h1>
+    <p class="error-404__text">
+      The page you're looking for doesn't exist, but our candles definitely do.
+    </p>
 
-<a href="{{ routes.all_products_collection_url }}">
-  {{ '404.back_to_shopping' | t }}
-</a>
+    <a href="{{ routes.all_products_collection_url }}" class="error-404__btn">
+      Back to shopping
+    </a>
+  </div>
+</section>
+
+<style>
+  .error-404 {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg);
+    padding: 80px 24px;
+    overflow: hidden;
+  }
+
+  .error-404__parallax {
+    text-align: center;
+    max-width: 560px;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+  }
+
+  .error-404__digits {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(4px, 2vw, 16px);
+    margin-bottom: 24px;
+  }
+
+  .error-404__digit {
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: clamp(96px, 22vw, 220px);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-fg);
+  }
+
+  .error-404__flame {
+    display: inline-block;
+    width: clamp(56px, 13vw, 130px);
+    height: clamp(84px, 19.5vw, 195px);
+    transform-origin: 50% 90%;
+    animation: error-404-flicker 2.4s ease-in-out infinite;
+  }
+
+  .error-404__flame svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .error-404__flame-inner {
+    animation: error-404-flicker-inner 2.4s ease-in-out infinite;
+  }
+
+  @keyframes error-404-flicker {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    20% { transform: rotate(-2deg) scale(0.98); }
+    45% { transform: rotate(1.5deg) scale(1.02); }
+    70% { transform: rotate(-1deg) scale(0.99); }
+    85% { transform: rotate(2deg) scale(1.01); }
+  }
+
+  @keyframes error-404-flicker-inner {
+    0%, 100% { opacity: 0.85; transform: scaleY(1); }
+    50% { opacity: 0.65; transform: scaleY(0.92); }
+  }
+
+  .error-404__title {
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    color: var(--color-fg);
+    text-transform: uppercase;
+    letter-spacing: 1px !important;
+    margin: 0 0 12px;
+  }
+
+  .error-404__text {
+    font-family: var(--font-helixa), sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-fg-muted);
+    margin: 0 0 36px;
+  }
+
+  .error-404__btn {
+    display: inline-block;
+    padding: 16px 40px;
+    background: var(--color-accent-solid);
+    color: #FFFFFF;
+    border-radius: 999px;
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .error-404__btn:hover {
+    background: var(--color-accent-active);
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .error-404__flame,
+    .error-404__flame-inner {
+      animation: none;
+    }
+
+    .error-404__parallax {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    var wrapper = document.querySelector('[data-error-404-parallax]');
+    if (!wrapper) return;
+
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    var maxShift = 18;
+
+    function applyShift(ratioX, ratioY) {
+      var x = ratioX * maxShift;
+      var y = ratioY * (maxShift * 0.6);
+      wrapper.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px)';
+    }
+
+    // Desktop: follows the mouse relative to viewport center.
+    window.addEventListener('pointermove', function(e) {
+      if (e.pointerType === 'touch') return;
+      var ratioX = (e.clientX / window.innerWidth - 0.5) * 2;
+      var ratioY = (e.clientY / window.innerHeight - 0.5) * 2;
+      applyShift(ratioX, ratioY);
+    });
+
+    // Mobile: follows the finger while dragging across the page.
+    window.addEventListener('touchmove', function(e) {
+      var touch = e.touches[0];
+      if (!touch) return;
+      var ratioX = (touch.clientX / window.innerWidth - 0.5) * 2;
+      var ratioY = (touch.clientY / window.innerHeight - 0.5) * 2;
+      applyShift(ratioX, ratioY);
+    }, { passive: true });
+
+    window.addEventListener('pointerleave', function() {
+      wrapper.style.transform = 'translate(0, 0)';
+    });
+  })();
+</script>
 
 {% schema %}
 {
