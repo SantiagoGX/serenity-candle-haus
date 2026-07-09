@@ -85,7 +85,7 @@
         {% endif %}
         {% if section.settings.instagram_url != blank %}
           <a href="{{ section.settings.instagram_url }}" class="footer-social-link" aria-label="Instagram" target="_blank" rel="noopener">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
               <rect x="2" y="2" width="20" height="20" rx="5"/>
               <circle cx="12" cy="12" r="4"/>
               <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
@@ -95,7 +95,7 @@
       </div>
 
       <div class="footer-brand">
-        <span class="footer-brand-text">SERENITY. CANDLE HAUS</span>
+        <span class="footer-brand-text" style="font-size: {{ section.settings.brand_text_size | default: 28 }}px;">SERENITY. CANDLE HAUS</span>
       </div>
 
       <div class="footer-copyright">
@@ -325,8 +325,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     color: var(--color-fg);
     opacity: 0.7;
@@ -382,7 +382,6 @@
 
   .footer-brand-text {
     font-family: var(--font-helvetica-world), Arial, sans-serif;
-    font-size: 18px;
     font-weight: 700;
     letter-spacing: -1px;
     color: var(--color-fg);
@@ -481,6 +480,20 @@
       "id": "instagram_url",
       "label": "Instagram URL",
       "info": "Leave blank to hide the icon"
+    },
+    {
+      "type": "header",
+      "content": "Brand Name"
+    },
+    {
+      "type": "range",
+      "id": "brand_text_size",
+      "label": "Brand name size",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 28
     },
     {
       "type": "header",
