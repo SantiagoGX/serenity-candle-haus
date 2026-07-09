@@ -20,13 +20,17 @@
   
   <div class="hero-banner__overlay" style="background-color: {{ section.settings.overlay_color }}; opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; {{ section.settings.overlay_custom_css }}"></div>
   
-  <div class="hero-banner__content">
-    <h1 class="hero-banner__heading">{{ section.settings.heading }}</h1>
-    <div class="hero-banner__divider" style="{% if section.settings.divider_color != blank %}background: {{ section.settings.divider_color }};{% endif %}"></div>
-    <p class="hero-banner__subheading">{{ section.settings.subheading }}</p>
-    {% if section.settings.button_text != blank %}
-      <a href="{{ section.settings.button_link }}" class="hero-banner__btn">{{ section.settings.button_text }}</a>
-    {% endif %}
+  <div class="hero-banner__wrapper page-width">
+    <div class="hero-banner__content hero-banner__content--{{ section.settings.content_position | default: 'center' }}">
+      <h1 class="hero-banner__heading">{{ section.settings.heading }}</h1>
+      {% if section.settings.show_divider %}
+        <div class="hero-banner__divider" style="{% if section.settings.divider_color != blank %}background: {{ section.settings.divider_color }};{% endif %}"></div>
+      {% endif %}
+      <p class="hero-banner__subheading">{{ section.settings.subheading }}</p>
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="hero-banner__btn">{{ section.settings.button_text }}</a>
+      {% endif %}
+    </div>
   </div>
 </div>
 
@@ -37,7 +41,6 @@
     min-height: 600px;
     display: flex;
     align-items: center;
-    justify-content: center;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -68,22 +71,41 @@
     z-index: 1;
   }
   
-  .hero-banner__content {
+  .hero-banner__wrapper {
     position: relative;
     z-index: 2;
-    text-align: center;
-    max-width: 900px;
-    padding: 0 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
     margin-top: 60px;
   }
-  
+
   @media (min-width: 769px) {
-    .hero-banner__content {
+    .hero-banner__wrapper {
       margin-top: 200px;
     }
+  }
+
+  .hero-banner__content {
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-banner__content--center {
+    margin: 0 auto;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-banner__content--left {
+    margin: 0 auto 0 0;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .hero-banner__content--right {
+    margin: 0 0 0 auto;
+    align-items: flex-end;
+    text-align: right;
   }
   
   .hero-banner__heading {
@@ -103,6 +125,15 @@
     height: 100px;
     background: rgba(255, 255, 255, 0.6);
     margin: 40px auto;
+    flex-shrink: 0;
+  }
+
+  .hero-banner__content--left .hero-banner__divider {
+    margin: 40px 0;
+  }
+
+  .hero-banner__content--right .hero-banner__divider {
+    margin: 40px 0 40px auto;
   }
   
   .hero-banner__subheading {
@@ -227,6 +258,18 @@
       "content": "Content"
     },
     {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center",
+      "info": "Applies on both desktop and mobile. Left/right align to the same margin as the header."
+    },
+    {
       "type": "textarea",
       "id": "heading",
       "label": "Heading",
@@ -237,6 +280,12 @@
       "id": "subheading",
       "label": "Subheading",
       "default": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show divider line",
+      "default": true
     },
     {
       "type": "color",
