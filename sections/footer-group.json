@@ -34,6 +34,9 @@
         "newsletter_button_text": "JOIN",
         "newsletter_success_message": "Thanks for joining! Check your inbox soon.",
         "instagram_url": "https://www.instagram.com/s.candlehaus?igsh=NW8zNjR0Mnpsdjhp",
+        "show_emblem": true,
+        "emblem_image": "shopify://shop_images/LOGOpdf_page-0001.png",
+        "brand_text_size": 28,
         "agency_text": "",
         "agency_brand": "",
         "agency_url": "#"
