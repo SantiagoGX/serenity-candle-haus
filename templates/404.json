@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "404",
+      "name": "t:general.404"
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
