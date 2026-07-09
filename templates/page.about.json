@@ -11,11 +11,30 @@
   "sections": {
     "about_editorial": {
       "type": "about-editorial",
+      "blocks": {
+        "text_1": {
+          "type": "text",
+          "settings": {
+            "body": "<p>Serenity Candle Haus began as a passion project fueled by a desire to stay creative. Our candles are inspired by intentional moments and thoughtfully crafted to bring warmth, comfort, and a sense of serenity into every space.</p><p>Hand-poured with a premium soy-coconut wax blend and phthalate-free fragrances, each candle is designed to help you slow down, unwind, and create a vibe that feels uniquely yours.</p>"
+          }
+        },
+        "quote_1": {
+          "type": "quote",
+          "settings": {
+            "quote": "Light the candle. Set the mood. Create the vibe.",
+            "attribution": "Serenity Candle Haus"
+          }
+        }
+      },
+      "block_order": [
+        "text_1",
+        "quote_1"
+      ],
       "settings": {
-        "image": "shopify://shop_images/PROMO_SHOT_2.png",
+        "header_image": "shopify://shop_images/PROMO_SHOT_2.png",
         "eyebrow": "Our Story",
         "title": "About Us",
-        "body": "<p>Serenity Candle Haus began as a passion project fueled by a desire to stay creative. Our candles are inspired by intentional moments and thoughtfully crafted to bring warmth, comfort, and a sense of serenity into every space.</p><p>Hand-poured with a premium soy-coconut wax blend and phthalate-free fragrances, each candle is designed to help you slow down, unwind, and create a vibe that feels uniquely yours.</p><p>Light the candle. Set the mood. Create the vibe.</p>"
+        "subtitle": "Candles that speak to your soul."
       }
     }
   },

@@ -1,101 +1,225 @@
-{% liquid
-  assign alt_text = section.settings.image.alt | default: section.settings.title | escape
-%}
 <section class="about-editorial" data-section-id="{{ section.id }}">
-  <div class="about-editorial__media">
-    {% if section.settings.image != blank %}
-      {{ section.settings.image | image_url: width: 1400 | image_tag:
-        loading: 'lazy',
-        class: 'about-editorial__image',
-        alt: alt_text
-      }}
-    {% endif %}
-  </div>
-  <div class="about-editorial__content">
+
+  <header class="about-editorial__intro">
     {% if section.settings.eyebrow != blank %}
       <p class="about-editorial__eyebrow">{{ section.settings.eyebrow }}</p>
     {% endif %}
     <h1 class="about-editorial__title">{{ section.settings.title | default: 'Our Story' }}</h1>
-    <div class="about-editorial__body">
-      {{ section.settings.body }}
+    {% if section.settings.subtitle != blank %}
+      <p class="about-editorial__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </header>
+
+  {% if section.settings.header_image != blank %}
+    <div class="about-editorial__hero">
+      {{ section.settings.header_image | image_url: width: 2400 | image_tag:
+        loading: 'lazy',
+        class: 'about-editorial__hero-image',
+        alt: section.settings.header_image.alt | default: section.settings.title
+      }}
+      {% if section.settings.header_caption != blank %}
+        <p class="about-editorial__caption">{{ section.settings.header_caption }}</p>
+      {% endif %}
     </div>
+  {% endif %}
+
+  <div class="about-editorial__blocks">
+    {% for block in section.blocks %}
+      {% case block.type %}
+
+        {% when 'text' %}
+          <div class="about-editorial__text" {{ block.shopify_attributes }}>
+            {{ block.settings.body }}
+          </div>
+
+        {% when 'image' %}
+          <div class="about-editorial__block-image about-editorial__block-image--{{ block.settings.width }}" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 2000 | image_tag:
+                loading: 'lazy',
+                class: 'about-editorial__block-image-el',
+                alt: block.settings.image.alt | default: block.settings.caption
+              }}
+            {% endif %}
+            {% if block.settings.caption != blank %}
+              <p class="about-editorial__caption">{{ block.settings.caption }}</p>
+            {% endif %}
+          </div>
+
+        {% when 'quote' %}
+          <blockquote class="about-editorial__quote" {{ block.shopify_attributes }}>
+            <p class="about-editorial__quote-text">&ldquo;{{ block.settings.quote }}&rdquo;</p>
+            {% if block.settings.attribution != blank %}
+              <cite class="about-editorial__quote-attribution">{{ block.settings.attribution }}</cite>
+            {% endif %}
+          </blockquote>
+
+      {% endcase %}
+    {% endfor %}
   </div>
+
 </section>
 
 <style>
   .about-editorial {
     background: var(--color-bg);
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
+    padding: 96px 24px 120px;
   }
 
-  .about-editorial__media {
-    width: 100%;
-  }
-
-  .about-editorial__image {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .about-editorial__content {
-    max-width: 680px;
+  /* Intro: eyebrow + title + subtitle, centered */
+  .about-editorial__intro {
+    max-width: 720px;
     margin: 0 auto;
-    padding: 64px 24px 96px;
+    text-align: center;
+    padding-bottom: 56px;
   }
 
   .about-editorial__eyebrow {
+    font-family: var(--font-helixa), sans-serif;
     font-size: 13px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-accent);
     font-weight: 600;
-    margin: 0 0 16px;
+    margin: 0 0 20px;
   }
 
   .about-editorial__title {
     font-family: var(--font-helvetica-world), Arial, sans-serif;
-    font-size: 40px;
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 1;
     color: var(--color-fg);
-    margin: 0 0 32px;
+    margin: 0 0 20px;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: -1px;
   }
 
-  .about-editorial__body {
+  .about-editorial__subtitle {
+    font-family: var(--font-helixa), sans-serif;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--color-fg-muted);
+    margin: 0 auto;
+    max-width: 46ch;
+  }
+
+  /* Hero image: near full-bleed */
+  .about-editorial__hero {
+    max-width: 1400px;
+    margin: 0 auto 96px;
+  }
+
+  .about-editorial__hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  /* Shared caption style, used under any image */
+  .about-editorial__caption {
+    font-family: var(--font-helixa), sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+    text-align: center;
+    margin: 16px 0 0;
+  }
+
+  /* Content blocks: single narrow column */
+  .about-editorial__blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+
+  .about-editorial__text {
+    max-width: 640px;
+    margin: 0 auto;
+    font-family: var(--font-helixa), sans-serif;
     font-size: 17px;
     line-height: 1.8;
     color: var(--color-fg-muted);
   }
 
-  .about-editorial__body p {
+  .about-editorial__text p {
     margin: 0 0 24px;
   }
 
-  @media (min-width: 900px) {
+  .about-editorial__text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .about-editorial__block-image {
+    margin: 0 auto;
+  }
+
+  .about-editorial__block-image--contained {
+    max-width: 720px;
+  }
+
+  .about-editorial__block-image--wide {
+    max-width: 1400px;
+  }
+
+  .about-editorial__block-image-el {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Pull quote: isolated, centered, fucsia rule as the only accent */
+  .about-editorial__quote {
+    max-width: 620px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 8px 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .about-editorial__quote-text {
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-style: italic;
+    font-size: clamp(24px, 3vw, 32px);
+    line-height: 1.35;
+    color: var(--color-fg);
+    margin: 32px 0 16px;
+  }
+
+  .about-editorial__quote-attribution {
+    display: block;
+    font-family: var(--font-helixa), sans-serif;
+    font-style: normal;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 0 0 32px;
+  }
+
+  @media (max-width: 600px) {
     .about-editorial {
-      grid-template-columns: 1.1fr 0.9fr;
-      align-items: center;
+      padding: 64px 20px 80px;
     }
 
-    .about-editorial__media,
-    .about-editorial__content {
-      height: 100%;
+    .about-editorial__intro {
+      padding-bottom: 40px;
     }
 
-    .about-editorial__content {
-      padding: 96px 64px;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    .about-editorial__hero {
+      margin-bottom: 64px;
     }
 
-    .about-editorial__image {
-      height: 100%;
-      object-fit: cover;
+    .about-editorial__blocks {
+      gap: 56px;
+    }
+
+    .about-editorial__quote-text {
+      margin-top: 24px;
     }
   }
 </style>
@@ -104,11 +228,6 @@
 {
   "name": "About Editorial",
   "settings": [
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Image"
-    },
     {
       "type": "text",
       "id": "eyebrow",
@@ -122,15 +241,92 @@
       "default": "Our Story"
     },
     {
-      "type": "richtext",
-      "id": "body",
-      "label": "Body text",
-      "default": "<p>Serenity Candle Haus began as a passion project fueled by a desire to stay creative. Our candles are inspired by intentional moments and thoughtfully crafted to bring warmth, comfort, and a sense of serenity into every space.</p><p>Hand-poured with a premium soy-coconut wax blend and phthalate-free fragrances, each candle is designed to help you slow down, unwind, and create a vibe that feels uniquely yours.</p><p>Light the candle. Set the mood. Create the vibe.</p>"
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "info": "Short italic supporting line under the title"
+    },
+    {
+      "type": "header",
+      "content": "Hero image"
+    },
+    {
+      "type": "image_picker",
+      "id": "header_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "header_caption",
+      "label": "Hero image caption",
+      "info": "Optional small caption below the hero image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Text",
+          "default": "<p>Write a paragraph about your brand's story here.</p>"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "info": "Optional small caption below the image"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "options": [
+            { "value": "contained", "label": "Contained (matches text column)" },
+            { "value": "wide", "label": "Wide" }
+          ],
+          "default": "contained"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "name": "Pull quote",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Light the candle. Set the mood. Create the vibe."
+        },
+        {
+          "type": "text",
+          "id": "attribution",
+          "label": "Attribution",
+          "info": "Optional, e.g. a name or the brand name"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "About Editorial"
+      "name": "About Editorial",
+      "blocks": [
+        { "type": "text" }
+      ]
     }
   ]
 }
