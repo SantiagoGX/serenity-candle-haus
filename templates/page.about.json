@@ -1,10 +1,21 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "about_editorial": {
       "type": "about-editorial",
       "settings": {
+        "image": "shopify://shop_images/PROMO_SHOT_2.png",
         "eyebrow": "Our Story",
-        "title": "About Us"
+        "title": "About Us",
+        "body": "<p>Serenity Candle Haus began as a passion project fueled by a desire to stay creative. Our candles are inspired by intentional moments and thoughtfully crafted to bring warmth, comfort, and a sense of serenity into every space.</p><p>Hand-poured with a premium soy-coconut wax blend and phthalate-free fragrances, each candle is designed to help you slow down, unwind, and create a vibe that feels uniquely yours.</p><p>Light the candle. Set the mood. Create the vibe.</p>"
       }
     }
   },

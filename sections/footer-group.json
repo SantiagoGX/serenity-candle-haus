@@ -29,9 +29,14 @@
       "settings": {
         "background_color": "#ffffff",
         "color_scheme": "default",
-        "agency_text": "Crafted with love by",
-        "agency_brand": "SNC Designs",
-        "agency_url": "https://snc-designs.com/"
+        "newsletter_heading": "Join Serenity's newsletter for exclusive discounts and first access to new drops.",
+        "newsletter_placeholder": "Enter your email",
+        "newsletter_button_text": "JOIN",
+        "newsletter_success_message": "Thanks for joining! Check your inbox soon.",
+        "instagram_url": "https://www.instagram.com/s.candlehaus?igsh=NW8zNjR0Mnpsdjhp",
+        "agency_text": "",
+        "agency_brand": "",
+        "agency_url": "#"
       }
     }
   },
