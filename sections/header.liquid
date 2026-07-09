@@ -162,12 +162,11 @@
     border-bottom-color: rgba(0, 0, 0, 0.08);
   }
   
-  .header--transparent.is-scrolled .header__logo-text,
   .header--transparent.is-scrolled .header__lang,
   .header--transparent.is-scrolled .header__dropdown,
   .header--transparent.is-scrolled .header__icon-btn,
   .header--transparent.is-scrolled .header__menu-btn {
-    color: var(--color-title-dark, #CB6CE6);
+    color: var(--color-fg);
   }
   
   /* Logo switch on transparent header */
@@ -209,19 +208,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-title-dark);
+    color: var(--color-fg);
     cursor: pointer;
     background: none;
     border: none;
     padding: 0;
   }
-  
+
   .header__lang,
   .header__dropdown {
     font-family: var(--font-helvetica-world);
     font-size: 13px;
     font-weight: 400;
-    color: var(--color-title-dark);
+    color: var(--color-fg);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     cursor: pointer;
@@ -401,7 +400,7 @@
   
   .header__icon-btn {
     position: relative;
-    color: var(--color-title-dark);
+    color: var(--color-fg);
     transition: color 0.4s ease;
     display: flex;
     align-items: center;
