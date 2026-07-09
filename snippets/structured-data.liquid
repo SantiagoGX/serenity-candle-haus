@@ -1,0 +1,57 @@
+{% comment %}
+  Structured data (JSON-LD) for search engines and AI answer engines.
+  Uses the `json` filter (not manual quoting) so strings are escaped
+  correctly for JSON, not HTML — a literal quote/ampersand in a product
+  title or description would otherwise break the script block silently.
+{% endcomment %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }},
+  "description": {{ shop.description | default: shop.name | json }}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {{ shop.url | append: "/search?q={search_term_string}" | json }},
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+{%- if template == 'product' and product -%}
+  {%- assign variant = product.selected_or_first_available_variant -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "description": {{ product.description | strip_html | truncate: 500 | json }},
+    "image": [{{ product.featured_image | image_url: width: 1200 | prepend: "https:" | json }}],
+    {%- if variant.sku != blank %}
+    "sku": {{ variant.sku | json }},
+    {%- endif %}
+    "brand": {
+      "@type": "Brand",
+      "name": {{ shop.name | json }}
+    },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": {{ shop.currency | json }},
+      "price": {{ variant.price | money_without_currency | strip_html | json }},
+      "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+      "url": {{ request.origin | append: product.url | json }}
+    }
+  }
+  </script>
+{%- endif -%}
