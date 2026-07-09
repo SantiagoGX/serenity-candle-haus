@@ -48,14 +48,13 @@ input, textarea, select {
 
 /* ========== Typography ========== */
 h1, h2, h3, h4, h5, h6,
-h1.avigea-font,
 .scroll-gallery__line {
   font-family: var(--font-helvetica-world), Arial, sans-serif;
   font-weight: 700;
   line-height: 1.2;
   text-transform: uppercase;
   letter-spacing: -4px !important;
-  color: var(--color-title-dark);
+  color: var(--color-fg);
 }
 
 h3{
