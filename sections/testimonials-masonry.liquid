@@ -1,6 +1,5 @@
 {% assign testimonials = section.blocks | where: 'type', 'testimonial' %}
 {% assign total_testimonials = testimonials.size %}
-{% assign initial_limit = 6 %}
 
 <section class="testimonials-section" data-section-id="{{ section.id }}">
   <div class="testimonials__container">
@@ -51,7 +50,7 @@
     </div>
 
     <div class="testimonials__grid" data-testimonials-grid>
-      {% for block in testimonials limit: initial_limit %}
+      {% for block in testimonials %}
         {% assign star_count = block.settings.rating | default: 5 | plus: 0 %}
         <div class="testimonial-card" data-index="{{ forloop.index }}" {{ block.shopify_attributes }}>
           <div class="testimonial-card__stars">{% for s in (1..5) %}{% if s <= star_count %}★{% else %}☆{% endif %}{% endfor %}</div>
@@ -60,10 +59,10 @@
           <span class="testimonial-card__author">{{ block.settings.author | default: 'María' }}</span>
         </div>
       {% endfor %}
-      
+
       {% if total_testimonials == 0 %}
         {% for i in (1..6) %}
-          <div class="testimonial-card testimonial-card--placeholder">
+          <div class="testimonial-card testimonial-card--placeholder" data-index="{{ forloop.index }}">
             <div class="testimonial-card__stars">★★★★★</div>
             <h3 class="testimonial-card__title">¡Por fin encontré la app de finanzas perfecta!</h3>
             <p class="testimonial-card__text">"He probado muchas aplicaciones de finanzas personales, pero ninguna se ajustaba a mis necesidades hasta que encontré Expense Tracker - MonAi. Es, con diferencia, la mejor app para rastrear gastos e ingresos con una organización adecuada."</p>
@@ -73,28 +72,12 @@
       {% endif %}
     </div>
 
-    {% if total_testimonials > initial_limit %}
-      <div class="testimonials__more" data-testimonials-more style="display: none;">
-        {% for block in testimonials offset: initial_limit %}
-          {% assign star_count = block.settings.rating | default: 5 | plus: 0 %}
-          <div class="testimonial-card" {{ block.shopify_attributes }}>
-            <div class="testimonial-card__stars">{% for s in (1..5) %}{% if s <= star_count %}★{% else %}☆{% endif %}{% endfor %}</div>
-            <h3 class="testimonial-card__title">{{ block.settings.title | default: '¡Por fin encontré la app de finanzas perfecta!' }}</h3>
-            <p class="testimonial-card__text">{{ block.settings.text }}</p>
-            <span class="testimonial-card__author">{{ block.settings.author | default: 'María' }}</span>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    {% if total_testimonials > initial_limit %}
-      <button class="testimonials__load-more" data-load-more>
-        <span>VIEW MORE</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 9l6 6 6-6"/>
-        </svg>
-      </button>
-    {% endif %}
+    <button class="testimonials__load-more" data-load-more style="display: none;">
+      <span>VIEW MORE</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 9l6 6 6-6"/>
+      </svg>
+    </button>
   </div>
 </section>
 
@@ -327,22 +310,34 @@
     if (!section) return;
     
     const loadMoreBtn = section.querySelector('[data-load-more]');
-    const moreContainer = section.querySelector('[data-testimonials-more]');
-    
-    if (loadMoreBtn && moreContainer) {
-      loadMoreBtn.addEventListener('click', function() {
-        if (moreContainer.style.display === 'none') {
-          moreContainer.style.display = 'grid';
-          loadMoreBtn.querySelector('span').textContent = 'VIEW LESS';
-          loadMoreBtn.classList.add('is-expanded');
-        } else {
-          moreContainer.style.display = 'none';
-          loadMoreBtn.querySelector('span').textContent = 'VIEW MORE';
-          loadMoreBtn.classList.remove('is-expanded');
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
+    const cards = Array.prototype.slice.call(section.querySelectorAll('.testimonial-card'));
+    const total = cards.length;
+
+    if (!loadMoreBtn || total === 0) return;
+
+    function isMobile() {
+      return window.matchMedia('(max-width: 768px)').matches;
     }
+
+    function config() {
+      return isMobile() ? { initial: 3, increment: 3 } : { initial: 6, increment: total };
+    }
+
+    let visibleCount = config().initial;
+
+    function render() {
+      cards.forEach(function(card, i) {
+        card.style.display = i < visibleCount ? '' : 'none';
+      });
+      loadMoreBtn.style.display = visibleCount >= total ? 'none' : '';
+    }
+
+    loadMoreBtn.addEventListener('click', function() {
+      visibleCount += config().increment;
+      render();
+    });
+
+    render();
   })();
 </script>
 
