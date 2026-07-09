@@ -33,24 +33,35 @@
       {% comment %} NEWSLETTER {% endcomment %}
       <div class="footer-column footer-newsletter">
         <p class="newsletter-text helixa-font">
-          Join the De Levillé Founder's List and secure tomorrow's heirlooms today.
+          {{ section.settings.newsletter_heading | default: "Join Serenity's newsletter for exclusive discounts and first access to new drops." }}
         </p>
-        
+
         {% form 'customer', class: 'newsletter-form' %}
           <input type="hidden" name="contact[tags]" value="newsletter">
-          <div class="newsletter-input-wrapper">
-            <input 
-              type="email" 
-              name="contact[email]" 
-              class="newsletter-input helixa-font" 
-              placeholder="Enter your email"
-              required
-              aria-label="Enter your email"
-            >
-          </div>
-          <button type="submit" class="newsletter-btn helixa-font">
-            SIGN UP
-          </button>
+          <input type="hidden" name="contact[accepts_marketing]" value="true">
+
+          {% if form.posted_successfully? %}
+            <p class="newsletter-success helixa-font">
+              {{ section.settings.newsletter_success_message | default: "Thanks for joining! Check your inbox soon." }}
+            </p>
+          {% else %}
+            <div class="newsletter-input-wrapper">
+              <input
+                type="email"
+                name="contact[email]"
+                class="newsletter-input helixa-font"
+                placeholder="{{ section.settings.newsletter_placeholder | default: 'Enter your email' }}"
+                required
+                aria-label="{{ section.settings.newsletter_placeholder | default: 'Enter your email' }}"
+              >
+            </div>
+            {% if form.errors %}
+              <p class="newsletter-error helixa-font">{{ form.errors.messages['email'] | default: 'Please enter a valid email.' }}</p>
+            {% endif %}
+            <button type="submit" class="newsletter-btn helixa-font">
+              {{ section.settings.newsletter_button_text | default: 'JOIN' }}
+            </button>
+          {% endif %}
         {% endform %}
       </div>
 
@@ -62,12 +73,21 @@
         <span class="credits-text helixa-font">{{ section.settings.agency_text | default: 'Crafted with love by' }}</span>
         <span class="credits-line"></span>
         <a href="{{ section.settings.agency_url | default: 'https://snc-designs.com/' }}" class="credits-brand helixa-font" style="text-decoration: none; color: inherit;" target="_blank">{{ section.settings.agency_brand | default: 'SNC Designs' }}</a>
+        {% if section.settings.instagram_url != blank %}
+          <a href="{{ section.settings.instagram_url }}" class="footer-social-link" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+        {% endif %}
       </div>
-      
+
       <div class="footer-brand">
         <span class="footer-brand-text">SERENITY. CANDLE HAUS</span>
       </div>
-      
+
       <div class="footer-copyright">
         <span class="copyright-text helixa-font">All Rights Reserved | Serenity 2025</span>
       </div>
@@ -239,9 +259,9 @@
 
   .newsletter-input {
     width: 100%;
-    padding: 14px 16px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    padding: 14px 20px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
     background-color: #FFFFFF;
     font-size: 14px;
     color: var(--color-fg);
@@ -255,16 +275,16 @@
   }
 
   .newsletter-input:focus {
-    border-color: rgba(0, 0, 0, 0.3);
+    border-color: var(--color-accent);
   }
 
   .newsletter-btn {
     width: 100%;
     padding: 14px 24px;
-    background-color: var(--color-bg);
-    color: var(--color-accent);
-    border: 1px solid var(--color-accent);
-    border-radius: 1000px;
+    background-color: var(--color-accent-solid);
+    color: #FFFFFF;
+    border: 1px solid var(--color-accent-solid);
+    border-radius: 999px;
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.5px;
@@ -274,9 +294,39 @@
   }
 
   .newsletter-btn:hover {
-    background-color: var(--color-accent-solid);
-    color: #fff;
-    border-color: var(--color-accent-solid);
+    background-color: var(--color-accent-active);
+    border-color: var(--color-accent-active);
+    color: #FFFFFF;
+  }
+
+  .newsletter-success {
+    font-size: 14px;
+    color: var(--color-accent);
+    line-height: 1.5;
+  }
+
+  .newsletter-error {
+    font-size: 13px;
+    color: #c0392b;
+    margin: -4px 0 0;
+  }
+
+  .footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    color: var(--color-fg);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .footer-social-link:hover {
+    color: var(--color-accent);
+    opacity: 1;
   }
 
   /* Barra inferior */
@@ -383,6 +433,44 @@
         }
       ],
       "default": "default"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "Join Serenity's newsletter for exclusive discounts and first access to new drops."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Email field placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button_text",
+      "label": "Button text",
+      "default": "JOIN"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_success_message",
+      "label": "Success message",
+      "default": "Thanks for joining! Check your inbox soon."
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL",
+      "info": "Leave blank to hide the icon"
     },
     {
       "type": "header",
