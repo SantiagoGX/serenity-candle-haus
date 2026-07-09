@@ -69,6 +69,16 @@
         {% endform %}
       </div>
 
+      {% if section.settings.show_emblem and section.settings.emblem_image != blank %}
+        <div class="footer-emblem">
+          {{ section.settings.emblem_image | image_url: width: 160 | image_tag:
+            loading: 'lazy',
+            class: 'footer-emblem__image',
+            alt: 'Serenity Candle Haus'
+          }}
+        </div>
+      {% endif %}
+
     </div>
 
     {% comment %} Barra inferior {% endcomment %}
@@ -163,24 +173,40 @@
     max-width: 360px;
   }
 
+  .footer-emblem {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .footer-emblem__image {
+    width: 64px;
+    height: auto;
+  }
+
   @media (max-width: 1024px) {
     .footer-grid {
       flex-wrap: wrap;
       gap: 40px;
     }
-    
+
     .footer-column {
       flex: 1 1 calc(33.333% - 30px);
       min-width: 150px;
     }
-    
+
     .footer-column--wide {
       flex: 1 1 calc(50% - 20px);
     }
-    
+
     .footer-newsletter {
       flex: 1 1 100%;
       max-width: 100%;
+    }
+
+    .footer-emblem {
+      display: none;
     }
   }
 
@@ -480,6 +506,21 @@
       "id": "instagram_url",
       "label": "Instagram URL",
       "info": "Leave blank to hide the icon"
+    },
+    {
+      "type": "header",
+      "content": "S. Emblem (desktop, opposite the newsletter)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_emblem",
+      "label": "Show emblem",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "emblem_image",
+      "label": "Emblem image"
     },
     {
       "type": "header",
