@@ -15,23 +15,20 @@
       {% if section.settings.subtitle != blank %}
         <p class="product-carousel__subtitle">{{ section.settings.subtitle }}</p>
       {% endif %}
-      
-      <div class="product-carousel__nav">
-        <button class="product-carousel__arrow product-carousel__arrow--prev" aria-label="Previous products" type="button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M15 18l-6-6 6-6"/>
-          </svg>
-        </button>
-        <button class="product-carousel__arrow product-carousel__arrow--next" aria-label="Next products" type="button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M9 18l6-6-6-6"/>
-          </svg>
-        </button>
-      </div>
     </div>
   </div>
 
   <div class="product-carousel__wrapper">
+    <button class="product-carousel__arrow product-carousel__arrow--prev" aria-label="Previous products" type="button">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+    <button class="product-carousel__arrow product-carousel__arrow--next" aria-label="Next products" type="button">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
     <div class="product-carousel__track" data-carousel-track role="list" aria-label="Product carousel">
       {% if collection and collection.products.size > 0 %}
         {% comment %} 
@@ -158,19 +155,29 @@
     margin-bottom: 24px;
   }
 
-  .product-carousel__nav {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 20px;
+  .product-carousel__wrapper {
+    position: relative;
+    width: 100%;
+    padding-left: 20px;
+  }
+
+  @media (min-width: 1552px) {
+    .product-carousel__wrapper {
+      padding-left: calc((100vw - 1512px) / 2 + 20px);
+    }
   }
 
   .product-carousel__arrow {
+    position: absolute;
+    top: 42%;
+    transform: translateY(-50%);
+    z-index: 3;
     width: 44px;
     height: 44px;
-    border-radius: 8px;
-    background: #fff;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid var(--color-accent-a15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     color: var(--color-accent);
     display: flex;
     align-items: center;
@@ -179,14 +186,22 @@
     transition: all 0.3s ease;
   }
 
+  .product-carousel__arrow--prev {
+    left: 12px;
+  }
+
+  .product-carousel__arrow--next {
+    right: 12px;
+  }
+
   .product-carousel__arrow:hover:not(:disabled) {
     background: var(--color-accent-solid);
     color: #fff;
   }
 
   .product-carousel__arrow:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+    opacity: 0;
+    pointer-events: none;
   }
 
   .product-carousel__arrow:focus-visible {
@@ -194,29 +209,39 @@
     outline-offset: 2px;
   }
 
-  .product-carousel__wrapper {
-    width: 100%;
-    padding-left: 20px;
-  }
-  
-  @media (min-width: 1552px) {
-    .product-carousel__wrapper {
-      padding-left: calc((100vw - 1512px) / 2 + 20px);
+  @media (max-width: 768px) {
+    .product-carousel__arrow {
+      display: none;
     }
   }
 
   .product-carousel__track {
     display: flex;
     gap: 16px;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
     padding-right: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    cursor: grab;
+  }
+
+  .product-carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-carousel__track.is-dragging {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    cursor: grabbing;
   }
 
   .product-carousel__slide {
     flex: 0 0 calc((100vw - 20px - 16px * 3) / 3.4);
     min-width: 280px;
     outline: none;
+    scroll-snap-align: start;
   }
 
   .product-carousel__slide:focus-visible {
@@ -257,7 +282,7 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: var(--color-accent);
-    border-radius: 2px;
+    border-radius: 999px;
   }
 
   .product-card-carousel__wishlist {
@@ -269,7 +294,7 @@
     height: 36px;
     background: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -351,7 +376,7 @@
     padding: 14px 26px;
     background: var(--color-bg);
     border: 1px solid var(--color-accent);
-    border-radius: 6px;
+    border-radius: 999px;
     font-family: 'Helvetica World', sans-serif;
     font-size: 12px;
     font-weight: 500;
@@ -395,63 +420,37 @@
 
     if (!track || slides.length === 0 || !prevBtn || !nextBtn) return;
 
-    let currentIndex = 0;
     const gap = 16;
-    let slideWidth = 0;
-    let maxIndex = 0;
-    let resizeTimeout;
 
-    function calculateDimensions() {
-      if (slides.length === 0) return;
-      
-      const wrapper = section.querySelector('.product-carousel__wrapper');
-      const wrapperStyles = window.getComputedStyle(wrapper);
-      const wrapperPaddingLeft = parseInt(wrapperStyles.paddingLeft) || 20;
-      const wrapperWidth = wrapper.offsetWidth - wrapperPaddingLeft + 20;
-      
-      slideWidth = slides[0].offsetWidth + gap;
-      
-      if (slideWidth === 0 || slideWidth === gap) return;
-      
-      const visibleSlides = wrapperWidth / slideWidth;
-      maxIndex = Math.max(0, Math.ceil(slides.length - visibleSlides));
-      
-      updateCarousel();
+    function scrollAmount() {
+      return slides[0].offsetWidth + gap;
     }
 
-    function updateCarousel() {
-      currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
-      
-      const translateX = -(currentIndex * slideWidth);
-      track.style.transform = 'translateX(' + translateX + 'px)';
-      
-      prevBtn.disabled = currentIndex === 0;
-      nextBtn.disabled = currentIndex >= maxIndex;
-      
-      track.setAttribute('aria-live', 'polite');
+    function updateArrows() {
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      prevBtn.disabled = track.scrollLeft <= 2;
+      nextBtn.disabled = track.scrollLeft >= maxScroll - 2;
     }
 
     prevBtn.addEventListener('click', function() {
-      if (currentIndex > 0) {
-        currentIndex--;
-        updateCarousel();
-        slides[currentIndex].focus();
-      }
+      track.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
     });
 
     nextBtn.addEventListener('click', function() {
-      if (currentIndex < maxIndex) {
-        currentIndex++;
-        updateCarousel();
-        slides[currentIndex].focus();
-      }
+      track.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+    });
+
+    let scrollRaf;
+    track.addEventListener('scroll', function() {
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(function() {
+        updateArrows();
+        scrollRaf = null;
+      });
     });
 
     window.addEventListener('resize', function() {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(function() {
-        calculateDimensions();
-      }, 150);
+      updateArrows();
     });
 
     section.addEventListener('keydown', function(e) {
@@ -464,7 +463,46 @@
       }
     });
 
-    calculateDimensions();
+    updateArrows();
+
+    // Click-and-drag scroll for desktop mouse/trackpad users
+    let isPointerDown = false;
+    let didDrag = false;
+    let dragStartX = 0;
+    let dragStartScroll = 0;
+
+    track.addEventListener('mousedown', function(e) {
+      isPointerDown = true;
+      didDrag = false;
+      dragStartX = e.pageX;
+      dragStartScroll = track.scrollLeft;
+      track.classList.add('is-dragging');
+    });
+
+    window.addEventListener('mousemove', function(e) {
+      if (!isPointerDown) return;
+      const delta = e.pageX - dragStartX;
+      if (Math.abs(delta) > 4) didDrag = true;
+      track.scrollLeft = dragStartScroll - delta;
+    });
+
+    function endDrag() {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      track.classList.remove('is-dragging');
+    }
+
+    window.addEventListener('mouseup', endDrag);
+    track.addEventListener('mouseleave', endDrag);
+
+    // Prevent a dragged mouse gesture from triggering the product link/buttons underneath
+    track.addEventListener('click', function(e) {
+      if (didDrag) {
+        e.preventDefault();
+        e.stopPropagation();
+        didDrag = false;
+      }
+    }, true);
 
     // Wishlist functionality
     const wishlistBtns = section.querySelectorAll('[data-wishlist-btn]');
