@@ -1,0 +1,315 @@
+{% form 'contact', id: 'ReviewForm' %}
+  <section class="review-form-section" data-section-id="{{ section.id }}">
+    <div class="review-form__container">
+      <div class="review-form__header">
+        <h1 class="review-form__title">{{ section.settings.title | default: 'Leave a Review' }}</h1>
+        {% if section.settings.subtitle != blank %}
+          <p class="review-form__subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+
+      {% if form.posted_successfully? %}
+        <div class="review-form__success">
+          {{ section.settings.success_message | default: "Thank you for sharing your review! We really appreciate it." }}
+        </div>
+      {% else %}
+        {% if form.errors %}
+          <div class="review-form__error">
+            {{ form.errors.messages['email'] | default: 'Please fill in all required fields.' }}
+          </div>
+        {% endif %}
+
+        <input type="hidden" name="contact[tags]" value="review-submission">
+
+        <div class="review-form__fields">
+          <div class="review-form__row">
+            <div class="review-form__field">
+              <label for="ReviewFormName" class="review-form__label">Your name</label>
+              <input
+                type="text"
+                id="ReviewFormName"
+                name="contact[name]"
+                class="review-form__input"
+                value="{% if form.name %}{{ form.name }}{% endif %}"
+                required
+              >
+            </div>
+            <div class="review-form__field">
+              <label for="ReviewFormEmail" class="review-form__label">Email</label>
+              <input
+                type="email"
+                id="ReviewFormEmail"
+                name="contact[email]"
+                class="review-form__input"
+                value="{% if form.email %}{{ form.email }}{% endif %}"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="review-form__field">
+            <label for="ReviewFormProduct" class="review-form__label">Which product?</label>
+            <input
+              type="text"
+              id="ReviewFormProduct"
+              name="contact[product]"
+              class="review-form__input"
+              placeholder="e.g. Love Jones Candle"
+            >
+          </div>
+
+          <div class="review-form__field">
+            <label class="review-form__label">Your rating</label>
+            <div class="review-form__stars">
+              <input type="radio" id="ReviewStar5" name="contact[rating]" value="5" required>
+              <label for="ReviewStar5" title="5 stars">★</label>
+              <input type="radio" id="ReviewStar4" name="contact[rating]" value="4">
+              <label for="ReviewStar4" title="4 stars">★</label>
+              <input type="radio" id="ReviewStar3" name="contact[rating]" value="3">
+              <label for="ReviewStar3" title="3 stars">★</label>
+              <input type="radio" id="ReviewStar2" name="contact[rating]" value="2">
+              <label for="ReviewStar2" title="2 stars">★</label>
+              <input type="radio" id="ReviewStar1" name="contact[rating]" value="1">
+              <label for="ReviewStar1" title="1 star">★</label>
+            </div>
+          </div>
+
+          <div class="review-form__field">
+            <label for="ReviewFormBody" class="review-form__label">Your review</label>
+            <textarea
+              id="ReviewFormBody"
+              name="contact[body]"
+              class="review-form__textarea"
+              rows="6"
+              placeholder="Tell us what you thought..."
+              required
+            >{% if form.body %}{{ form.body }}{% endif %}</textarea>
+          </div>
+
+          <div class="review-form__submit-wrapper">
+            <button type="submit" class="review-form__submit">
+              {{ section.settings.submit_label | default: 'Submit Review' }}
+            </button>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endform %}
+
+<style>
+  .review-form-section {
+    padding: 96px 24px;
+    background: var(--color-bg);
+  }
+
+  .review-form__container {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .review-form__header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .review-form__title {
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700;
+    color: var(--color-fg);
+    margin: 0 0 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px !important;
+  }
+
+  .review-form__subtitle {
+    font-family: var(--font-helixa), sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-fg-muted);
+    margin: 0 auto;
+    max-width: 460px;
+  }
+
+  .review-form__success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 20px 24px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: var(--font-helixa), sans-serif;
+    font-size: 15px;
+  }
+
+  .review-form__error {
+    background: #fdecea;
+    color: #c0392b;
+    padding: 14px 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    text-align: center;
+    font-family: var(--font-helixa), sans-serif;
+    font-size: 14px;
+  }
+
+  .review-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .review-form__field {
+    margin-bottom: 20px;
+  }
+
+  .review-form__label {
+    display: block;
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-fg);
+    margin-bottom: 8px;
+  }
+
+  .review-form__input,
+  .review-form__textarea {
+    width: 100%;
+    padding: 16px;
+    background: var(--color-border);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-helixa), sans-serif;
+    font-size: 14px;
+    color: var(--color-fg);
+    outline: none;
+    transition: background 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  .review-form__input:focus,
+  .review-form__textarea:focus {
+    background: var(--color-accent-a10);
+  }
+
+  .review-form__textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+
+  /* Star rating: pure CSS, no JS. Inputs are in reverse DOM order (5..1) so
+     the row-reverse flex direction displays them 1..5 left-to-right while
+     the ~ sibling selector can style everything to the left of a checked
+     or hovered star. */
+  .review-form__stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .review-form__stars input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .review-form__stars label {
+    font-size: 32px;
+    line-height: 1;
+    color: var(--color-border);
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+
+  .review-form__stars input:checked ~ label,
+  .review-form__stars label:hover,
+  .review-form__stars label:hover ~ label {
+    color: var(--color-accent);
+  }
+
+  .review-form__stars input:focus-visible + label {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .review-form__submit-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  .review-form__submit {
+    padding: 16px 48px;
+    background: var(--color-accent-solid);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: var(--font-helvetica-world), Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .review-form__submit:hover {
+    background: var(--color-accent-active);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 600px) {
+    .review-form-section {
+      padding: 64px 20px;
+    }
+
+    .review-form__row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .review-form__stars label {
+      font-size: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Review Form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Leave a Review"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Tried one of our candles or diffusers? We'd love to hear what you thought."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Submit Review"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you for sharing your review! We really appreciate it."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Review Form"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "review_form": {
+      "type": "review-form",
+      "settings": {}
+    }
+  },
+  "order": [
+    "review_form"
+  ]
+}
