@@ -11,6 +11,7 @@
   "current": {
     "background_color": "#ffffff",
     "foreground_color": "#111111",
+    "favicon": "shopify://shop_images/LOGOpdf_page-0001.png",
     "content_for_index": []
   }
 }

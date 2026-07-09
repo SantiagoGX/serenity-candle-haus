@@ -14,8 +14,8 @@
     "header": {
       "type": "header",
       "settings": {
-        "logo_dark": "shopify://shop_images/Logo_oscuro.png",
-        "logo_light": "shopify://shop_images/Logo_Claro.png",
+        "logo_dark": "shopify://shop_images/Serenity_Logo_without_bg.png",
+        "logo_light": "shopify://shop_images/Serenity_Logo_without_bg_1.png",
         "logo_height": 40,
         "menu": "main-menu",
         "mobile_menu": "",
