@@ -60,12 +60,12 @@
   }
 
   .hero-banner__video-el {
-    opacity: 0;
-    transition: opacity 0.5s ease;
+    opacity: 1;
+    transition: opacity 0.4s ease;
   }
 
-  .hero-banner__video-el.is-playing {
-    opacity: 1;
+  .hero-banner__video-el.autoplay-blocked {
+    opacity: 0;
   }
 
   .hero-banner__video video {
@@ -219,16 +219,19 @@
     const video = section.querySelector('.hero-banner__video-el');
     if (!video) return;
 
+    // The video is visible immediately, same as normal autoplay — this only
+    // hides it if the browser actually confirms autoplay was blocked.
     video.addEventListener('playing', function() {
-      video.classList.add('is-playing');
+      video.classList.remove('autoplay-blocked');
     });
 
     function attemptPlay() {
       const playPromise = video.play();
       if (playPromise && typeof playPromise.catch === 'function') {
         playPromise.catch(function() {
-          // Autoplay blocked (e.g. Low Power Mode) — the thumbnail behind the
-          // video keeps showing since we never reveal a paused/controls video.
+          // Confirmed blocked (e.g. Low Power Mode) — fall back to the static
+          // thumbnail instead of leaving a paused video with a play icon.
+          video.classList.add('autoplay-blocked');
         });
       }
     }
@@ -237,7 +240,7 @@
 
     const retryEvents = ['touchstart', 'click', 'scroll', 'keydown'];
     function retryOnInteraction() {
-      if (video.classList.contains('is-playing')) {
+      if (!video.classList.contains('autoplay-blocked')) {
         retryEvents.forEach(function(evt) {
           document.removeEventListener(evt, retryOnInteraction);
         });
