@@ -14,7 +14,7 @@
 <div class="hero-banner" data-section-id="{{ section.id }}" style="{% if has_image %}background-image: url('{{ section.settings.background_image | image_url: width: 2000 }}');{% endif %}">
   {% if has_video %}
     <div class="hero-banner__video">
-      {{ section.settings.background_video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, image_size: '2000x' }}
+      {{ section.settings.background_video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'auto', image_size: '2000x' }}
     </div>
   {% endif %}
   
