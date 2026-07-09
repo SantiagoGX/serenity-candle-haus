@@ -114,6 +114,9 @@
     
     <nav class="mobile-menu__nav">
       {% assign mobile_menu = linklists[section.settings.mobile_menu] %}
+      {% if mobile_menu == blank %}
+        {% assign mobile_menu = linklists[section.settings.menu] %}
+      {% endif %}
       {% if mobile_menu != blank %}
         {% for link in mobile_menu.links %}
           <a href="{{ link.url }}" class="mobile-menu__link">{{ link.title }}</a>
@@ -661,7 +664,8 @@
       "type": "link_list",
       "id": "menu",
       "label": "Menu",
-      "default": "main-menu"
+      "default": "main-menu",
+      "info": "Used in the side panel (hamburger icon) if no separate Mobile menu is set below"
     },
     {
       "type": "header",
@@ -671,7 +675,7 @@
       "type": "link_list",
       "id": "mobile_menu",
       "label": "Mobile menu",
-      "info": "Menu displayed in the side panel when clicking the hamburger icon"
+      "info": "Optional override for the side panel menu. Leave blank to use Menu above."
     },
     {
       "type": "header",
