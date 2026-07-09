@@ -90,5 +90,22 @@
         "info": "Square image, at least 32x32px. Recommended: the \"S.\" emblem mark."
       }
     ]
+  },
+  {
+    "name": "Loading Animation",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_loader",
+        "label": "Show loading animation",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "id": "loader_image",
+        "label": "Loader mark",
+        "info": "Small square mark (e.g. the \"S.\" emblem). Shown once per browser session while the page loads."
+      }
+    ]
   }
 ]

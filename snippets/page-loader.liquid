@@ -1,0 +1,86 @@
+{% comment %}
+  One-time (per browser session) loading animation: full white screen with
+  the brand mark spinning once, then fading out. Skipped entirely if no
+  loader_image is set, if disabled, or if the visitor already saw it this
+  session (sessionStorage flag) — never replays on every internal click.
+{% endcomment %}
+{%- if settings.enable_loader and settings.loader_image != blank -%}
+  <div id="page-loader" class="page-loader" aria-hidden="true">
+    {{ settings.loader_image | image_url: width: 160 | image_tag:
+      class: 'page-loader__mark',
+      alt: '',
+      loading: 'eager'
+    }}
+  </div>
+
+  <style>
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.35s ease;
+    }
+
+    .page-loader.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .page-loader__mark {
+      width: 56px;
+      height: auto;
+      animation: page-loader-spin 0.6s cubic-bezier(0.65, 0, 0.35, 1) 0.15s 1 both;
+    }
+
+    @keyframes page-loader-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page-loader__mark {
+        animation: none;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      var loader = document.getElementById('page-loader');
+      if (!loader) return;
+
+      var SESSION_KEY = 'serenity_loader_shown';
+      var alreadyShown = false;
+      try {
+        alreadyShown = !!sessionStorage.getItem(SESSION_KEY);
+      } catch (e) {
+        alreadyShown = false;
+      }
+
+      if (alreadyShown) {
+        loader.parentNode.removeChild(loader);
+        return;
+      }
+
+      try {
+        sessionStorage.setItem(SESSION_KEY, '1');
+      } catch (e) {
+        // Private browsing or storage disabled — animation just plays once
+        // this page load without persisting; acceptable fallback.
+      }
+
+      window.setTimeout(function() {
+        loader.classList.add('is-hidden');
+        window.setTimeout(function() {
+          if (loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+          }
+        }, 400);
+      }, 850);
+    })();
+  </script>
+{%- endif -%}
