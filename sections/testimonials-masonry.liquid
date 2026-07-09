@@ -52,7 +52,7 @@
 
     <div class="testimonials__grid" data-testimonials-grid>
       {% for block in testimonials limit: initial_limit %}
-        {% assign star_count = block.settings.rating | default: 5 %}
+        {% assign star_count = block.settings.rating | default: 5 | plus: 0 %}
         <div class="testimonial-card" data-index="{{ forloop.index }}" {{ block.shopify_attributes }}>
           <div class="testimonial-card__stars">{% for s in (1..5) %}{% if s <= star_count %}★{% else %}☆{% endif %}{% endfor %}</div>
           <h3 class="testimonial-card__title">{{ block.settings.title | default: '¡Por fin encontré la app de finanzas perfecta!' }}</h3>
@@ -76,7 +76,7 @@
     {% if total_testimonials > initial_limit %}
       <div class="testimonials__more" data-testimonials-more style="display: none;">
         {% for block in testimonials offset: initial_limit %}
-          {% assign star_count = block.settings.rating | default: 5 %}
+          {% assign star_count = block.settings.rating | default: 5 | plus: 0 %}
           <div class="testimonial-card" {{ block.shopify_attributes }}>
             <div class="testimonial-card__stars">{% for s in (1..5) %}{% if s <= star_count %}★{% else %}☆{% endif %}{% endfor %}</div>
             <h3 class="testimonial-card__title">{{ block.settings.title | default: '¡Por fin encontré la app de finanzas perfecta!' }}</h3>
