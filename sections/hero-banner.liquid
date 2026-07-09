@@ -13,8 +13,8 @@
 
 <div class="hero-banner" data-section-id="{{ section.id }}" style="{% if has_image %}background-image: url('{{ section.settings.background_image | image_url: width: 2000 }}');{% endif %}">
   {% if has_video %}
-    <div class="hero-banner__video">
-      {{ section.settings.background_video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'auto', image_size: '2000x' }}
+    <div class="hero-banner__video" data-hero-video-wrapper{% if section.settings.background_video.preview_image %} style="background-image: url('{{ section.settings.background_video.preview_image | image_url: width: 2000 }}');"{% endif %}>
+      {{ section.settings.background_video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'auto', image_size: '2000x', class: 'hero-banner__video-el' }}
     </div>
   {% endif %}
   
@@ -54,8 +54,20 @@
     width: 100%;
     height: 100%;
     z-index: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
-  
+
+  .hero-banner__video-el {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .hero-banner__video-el.is-playing {
+    opacity: 1;
+  }
+
   .hero-banner__video video {
     width: 100%;
     height: 100%;
@@ -198,6 +210,47 @@
     }
   }
 </style>
+
+<script>
+  (function() {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+
+    const video = section.querySelector('.hero-banner__video-el');
+    if (!video) return;
+
+    video.addEventListener('playing', function() {
+      video.classList.add('is-playing');
+    });
+
+    function attemptPlay() {
+      const playPromise = video.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(function() {
+          // Autoplay blocked (e.g. Low Power Mode) — the thumbnail behind the
+          // video keeps showing since we never reveal a paused/controls video.
+        });
+      }
+    }
+
+    attemptPlay();
+
+    const retryEvents = ['touchstart', 'click', 'scroll', 'keydown'];
+    function retryOnInteraction() {
+      if (video.classList.contains('is-playing')) {
+        retryEvents.forEach(function(evt) {
+          document.removeEventListener(evt, retryOnInteraction);
+        });
+        return;
+      }
+      attemptPlay();
+    }
+
+    retryEvents.forEach(function(evt) {
+      document.addEventListener(evt, retryOnInteraction, { passive: true });
+    });
+  })();
+</script>
 
 {% schema %}
 {
