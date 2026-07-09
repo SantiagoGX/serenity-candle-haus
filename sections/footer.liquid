@@ -32,27 +32,31 @@
 
       {% comment %} NEWSLETTER {% endcomment %}
       <div class="footer-column footer-newsletter">
-        <p class="newsletter-text helixa-font">
-          {{ section.settings.newsletter_heading | default: "Join Serenity's newsletter for exclusive discounts and first access to new drops." }}
-        </p>
+        {% if section.settings.newsletter_heading != blank %}
+          <p class="newsletter-text helixa-font">
+            {{ section.settings.newsletter_heading }}
+          </p>
+        {% endif %}
 
         {% form 'customer', class: 'newsletter-form' %}
           <input type="hidden" name="contact[tags]" value="newsletter">
           <input type="hidden" name="contact[accepts_marketing]" value="true">
 
           {% if form.posted_successfully? %}
-            <p class="newsletter-success helixa-font">
-              {{ section.settings.newsletter_success_message | default: "Thanks for joining! Check your inbox soon." }}
-            </p>
+            {% if section.settings.newsletter_success_message != blank %}
+              <p class="newsletter-success helixa-font">
+                {{ section.settings.newsletter_success_message }}
+              </p>
+            {% endif %}
           {% else %}
             <div class="newsletter-input-wrapper">
               <input
                 type="email"
                 name="contact[email]"
                 class="newsletter-input helixa-font"
-                placeholder="{{ section.settings.newsletter_placeholder | default: 'Enter your email' }}"
+                placeholder="{{ section.settings.newsletter_placeholder }}"
                 required
-                aria-label="{{ section.settings.newsletter_placeholder | default: 'Enter your email' }}"
+                aria-label="{{ section.settings.newsletter_placeholder | default: 'Email' }}"
               >
             </div>
             {% if form.errors %}
@@ -70,9 +74,15 @@
     {% comment %} Barra inferior {% endcomment %}
     <div class="footer-bottom">
       <div class="footer-credits">
-        <span class="credits-text helixa-font">{{ section.settings.agency_text | default: 'Crafted with love by' }}</span>
-        <span class="credits-line"></span>
-        <a href="{{ section.settings.agency_url | default: 'https://snc-designs.com/' }}" class="credits-brand helixa-font" style="text-decoration: none; color: inherit;" target="_blank">{{ section.settings.agency_brand | default: 'SNC Designs' }}</a>
+        {% if section.settings.agency_text != blank %}
+          <span class="credits-text helixa-font">{{ section.settings.agency_text }}</span>
+        {% endif %}
+        {% if section.settings.agency_text != blank and section.settings.agency_brand != blank %}
+          <span class="credits-line"></span>
+        {% endif %}
+        {% if section.settings.agency_brand != blank %}
+          <a href="{{ section.settings.agency_url | default: '#' }}" class="credits-brand helixa-font" style="text-decoration: none; color: inherit;" target="_blank">{{ section.settings.agency_brand }}</a>
+        {% endif %}
         {% if section.settings.instagram_url != blank %}
           <a href="{{ section.settings.instagram_url }}" class="footer-social-link" aria-label="Instagram" target="_blank" rel="noopener">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
