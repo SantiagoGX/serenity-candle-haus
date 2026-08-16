@@ -9,17 +9,43 @@
  */
 {
   "sections": {
+    "promo_popup": {
+      "type": "promo-popup",
+      "name": "Promotional Pop-up",
+      "settings": {
+        "enabled": true,
+        "test_mode": false,
+        "delay_seconds": 5,
+        "reappear_days": 7,
+        "eyebrow": "LIMITED TIME OFFER",
+        "heading": "10% OFF\nENTIRE STORE",
+        "description": "Use code FIRST100 for 10% off your entire order today.",
+        "coupon_label": "Discount Code",
+        "coupon_code": "FIRST100",
+        "copy_button_text": "Copy",
+        "copied_button_text": "Copied!",
+        "expiration_text": "Expires 8/31",
+        "button_text": "SHOP COLLECTION",
+        "button_link": "shopify://collections/all",
+        "enable_timer": false,
+        "timer_heading": "Drop ends in:",
+        "timer_target_date": "2026-08-31T23:59:59"
+      }
+    },
     "hero_banner_bR3Tp9": {
       "type": "hero-banner",
       "name": "Hero Banner",
       "settings": {
-        "background_type": "video",
+        "background_type": "image",
+        "background_image": "shopify://shop_images/ChatGPT_Image_Aug_3_2026_10_03_48_PM.png",
         "background_video": "shopify://files/videos/Video_Horizontal_Generado.mp4",
         "overlay_color": "#000000",
         "overlay_opacity": 45,
         "overlay_custom_css": "",
+        "content_position": "center",
         "heading": "SET THE VIBE.",
         "subheading": "Candles that speak to your soul.",
+        "show_divider": true,
         "divider_color": "#ffffff",
         "button_text": "SHOP NOW",
         "button_link": "shopify://collections/all"
@@ -182,9 +208,9 @@
         "testimonial_r3": {
           "type": "testimonial",
           "settings": {
-            "title": "Warm and a little spicy, love it",
-            "text": "The Saffron Grove reed diffuser smells incredible, warm and a little spicy without being overpowering. It's become part of my daily routine and my apartment always smells amazing.",
-            "author": "Priya K.",
+            "title": "LOVE JONES",
+            "text": "Love Jones smells amazinggg and the name fits it perfectly. It instantly sets the vibe the second I light it. Cozy, warm, and one of those scents you never want to stop burning. Definitely buying this one again.",
+            "author": "Ke T.",
             "rating": "5"
           }
         },
@@ -237,6 +263,7 @@
     }
   },
   "order": [
+    "promo_popup",
     "hero_banner_bR3Tp9",
     "product_carousel_TB747N",
     "product_carousel_JPX8fV",

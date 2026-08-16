@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serenity Candle Haus — Pop-up Mockup Preview</title>
+  
+  <!-- Font Faces de la Tienda -->
+  <style>
+    @font-face {
+      font-family: 'Helvetica World';
+      src: url('./assets/helvetica-world.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Helvetica World';
+      src: url('./assets/helvetica-world-bold.woff') format('woff');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Helixa';
+      src: url('./assets/Helixa-Regular.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Helixa';
+      src: url('./assets/Helixa-Bold.woff') format('woff');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    :root {
+      --font-heading: 'Helvetica World', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-body: 'Helixa', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      
+      --color-accent: #CB6CE6;
+      --color-accent-solid: #B125D9;
+      --color-accent-hover: #BC41DF;
+      --color-accent-soft: rgba(203, 108, 230, 0.08);
+      --color-accent-border: rgba(203, 108, 230, 0.25);
+      
+      --color-fg: #111111;
+      --color-fg-muted: #6B6B6B;
+      --color-border: #E8E8E8;
+      --color-bg: #FFFFFF;
+      --color-bg-alt: #F9F9F8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: #0d0d10;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(203, 108, 230, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(255, 180, 100, 0.05) 0%, transparent 50%),
+        linear-gradient(180deg, #16151a 0%, #0c0c0e 100%);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* Top Control Bar */
+    .preview-header {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 8px 16px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 9999;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .preview-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #111;
+      padding-right: 10px;
+      border-right: 1px solid #ddd;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 15px;
+      border-radius: 100px;
+      cursor: pointer;
+      color: #555;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn:hover {
+      color: #111;
+      background: #f0f0f0;
+    }
+
+    .tab-btn.active {
+      background: var(--color-accent-solid);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(177, 37, 217, 0.38);
+    }
+
+    .btn-reopen {
+      background: #111;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 13px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-reopen:hover {
+      background: #333;
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      opacity: 1;
+      visibility: visible;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-backdrop.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .modal-card {
+      background: #fff;
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.5), 0 0 1px 1px rgba(255,255,255,0.1);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: none;
+      animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .modal-card.is-active {
+      display: flex;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.93) translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Close Button */
+    .btn-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 20;
+      color: #111;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-close:hover {
+      background: #111;
+      color: #fff;
+      transform: rotate(90deg) scale(1.05);
+    }
+
+    /* Coupon Box Base */
+    .coupon-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FAF7FB;
+      border: 1.5px dashed var(--color-accent-border);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin: 16px 0;
+      position: relative;
+      transition: all 0.25s ease;
+    }
+
+    .coupon-box:hover {
+      border-color: var(--color-accent-solid);
+      background: rgba(203, 108, 230, 0.1);
+    }
+
+    .coupon-code-wrap {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .coupon-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--color-fg-muted);
+      margin-bottom: 2px;
+    }
+
+    .coupon-code {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--color-fg);
+    }
+
+    .btn-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #111;
+      color: #fff;
+      border: none;
+      padding: 9px 15px;
+      border-radius: 9px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .btn-copy:hover {
+      background: var(--color-accent-solid);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(177, 37, 217, 0.3);
+    }
+
+    .btn-copy.copied {
+      background: #10B981 !important;
+      color: #fff !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35) !important;
+    }
+
+    .btn-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 16px 28px;
+      background: var(--color-accent-solid);
+      color: #fff;
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      border-radius: 1000px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 18px rgba(177, 37, 217, 0.28);
+    }
+
+    .btn-cta:hover {
+      background: var(--color-accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(177, 37, 217, 0.42);
+    }
+
+    .expire-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-fg-muted);
+      margin-bottom: 15px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--color-accent-solid);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .headline-big {
+      font-family: var(--font-heading) !important;
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.08 !important;
+      letter-spacing: -0.8px !important;
+      text-transform: uppercase;
+      color: var(--color-fg);
+      margin-bottom: 10px;
+    }
+
+    .body-desc {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--color-fg-muted);
+      margin-bottom: 2px;
+    }
+
+    /* =========================================================
+       OPCIÓN 1: EDITORIAL SPLIT (2 Columnas Clásica de Lujo)
+       ========================================================= */
+    #option-1 {
+      max-width: 840px;
+      width: 100%;
+      flex-direction: row;
+    }
+
+    #option-1 .modal-image-col {
+      width: 48%;
+      position: relative;
+      background: #191412;
+      min-height: 480px;
+      overflow: hidden;
+    }
+
+    #option-1 .modal-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 35%;
+      display: block;
+      transition: transform 0.8s ease;
+    }
+
+    #option-1:hover .modal-image {
+      transform: scale(1.03);
+    }
+
+    #option-1 .modal-content-col {
+      width: 52%;
+      padding: 44px 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: left;
+    }
+
+    /* =========================================================
+       OPCIÓN 2: ARCH & GLOW (Minimalista Centrado con Arco)
+       ========================================================= */
+    #option-2 {
+      max-width: 470px;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      padding: 38px 36px 32px;
+      text-align: center;
+    }
+
+    .arch-image-wrap {
+      width: 140px;
+      height: 175px;
+      border-radius: 100px 100px 18px 18px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      border: 3px solid #fff;
+      background: #1a1512;
+    }
+
+    .arch-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 35%;
+    }
+
+    #option-2 .headline-big {
+      font-size: 32px;
+      letter-spacing: -0.6px !important;
+      margin-bottom: 6px;
+    }
+
+    #option-2 .coupon-box {
+      width: 100%;
+    }
+
+    /* =========================================================
+       OPCIÓN 3: MODERN LUXE CARD (Diseño Compacto Sofisticado)
+       ========================================================= */
+    #option-3 {
+      max-width: 780px;
+      width: 100%;
+      flex-direction: row;
+      background: #FAFAFA;
+      border: 1px solid #EDEDED;
+    }
+
+    #option-3 .modal-image-col {
+      width: 42%;
+      position: relative;
+      overflow: hidden;
+      min-height: 440px;
+      background: #141110;
+    }
+
+    #option-3 .modal-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 35%;
+    }
+
+    #option-3 .brand-badge-overlay {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: rgba(17, 17, 17, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    #option-3 .modal-content-col {
+      width: 58%;
+      padding: 42px 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #FFFFFF;
+    }
+
+    #option-3 .pill-discount {
+      display: inline-block;
+      align-self: flex-start;
+      background: #111;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    #option-3 .headline-big {
+      font-size: 34px;
+      letter-spacing: -0.6px !important;
+      margin-bottom: 6px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      background: #111;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 10000;
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .toast.is-show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================================================
+       RESPONSIVE MOBILE OPTIMIZATIONS
+       ========================================================= */
+    @media (max-width: 768px) {
+      .modal-card {
+        flex-direction: column !important;
+        max-width: 390px !important;
+        width: 100% !important;
+        max-height: 88vh !important;
+        overflow-y: auto !important;
+        border-radius: 22px !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55) !important;
+        margin: 0 auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #option-1 .modal-image-col, #option-3 .modal-image-col {
+        width: 100% !important;
+        min-height: 280px !important;
+        height: 280px !important;
+        flex-shrink: 0;
+      }
+
+      #option-1 .modal-image, #option-3 .modal-image {
+        object-position: center 40% !important;
+      }
+
+      .btn-close {
+        top: 12px !important;
+        right: 12px !important;
+        width: 34px !important;
+        height: 34px !important;
+        background: rgba(255, 255, 255, 0.92) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+      }
+
+      #option-1 .modal-content-col, #option-3 .modal-content-col {
+        width: 100% !important;
+        padding: 22px 20px 24px !important;
+      }
+
+      .eyebrow {
+        font-size: 10px !important;
+        letter-spacing: 1.8px !important;
+        margin-bottom: 6px !important;
+      }
+
+      .headline-big {
+        font-size: 25px !important;
+        line-height: 1.15 !important;
+        letter-spacing: -0.4px !important;
+        margin-bottom: 6px !important;
+      }
+
+      .body-desc {
+        font-size: 13px !important;
+        line-height: 1.45 !important;
+        margin-bottom: 2px !important;
+      }
+
+      .coupon-box {
+        padding: 9px 12px !important;
+        margin: 12px 0 10px !important;
+        border-radius: 12px !important;
+      }
+
+      .coupon-label {
+        font-size: 9px !important;
+        letter-spacing: 1px !important;
+      }
+
+      .coupon-code {
+        font-size: 17px !important;
+        letter-spacing: 1.5px !important;
+      }
+
+      .btn-copy {
+        padding: 8px 13px !important;
+        font-size: 11px !important;
+        border-radius: 8px !important;
+        gap: 5px !important;
+      }
+
+      .expire-tag {
+        font-size: 11px !important;
+        margin-bottom: 12px !important;
+        gap: 5px !important;
+      }
+
+      .btn-cta {
+        padding: 14px 20px !important;
+        font-size: 12px !important;
+        letter-spacing: 1.2px !important;
+      }
+
+      .preview-header {
+        width: 94%;
+        justify-content: center;
+        flex-wrap: wrap;
+        border-radius: 20px;
+      }
+
+      .preview-title {
+        border-right: none;
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Options Control Bar -->
+  <header class="preview-header">
+    <span class="preview-title">Serenity Pop-up</span>
+    <button class="tab-btn active" onclick="switchOption(1)">1. Editorial Split</button>
+    <button class="tab-btn" onclick="switchOption(2)">2. Arch & Glow</button>
+    <button class="tab-btn" onclick="switchOption(3)">3. Modern Luxe</button>
+    <button class="btn-reopen" onclick="openModal()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+      Reopen
+    </button>
+  </header>
+
+  <!-- Modal Backdrop -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="handleBackdropClick(event)">
+
+    <!-- ==========================================
+         OPTION 1: EDITORIAL SPLIT (Recommended)
+         ========================================== -->
+    <div class="modal-card is-active" id="option-1">
+      <button class="btn-close" onclick="closeModal()" aria-label="Close popup modal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      
+      <div class="modal-image-col">
+        <img class="modal-image" src="./assets/popup-promo-candle.png" alt="Serenity Saffron Grove Candle">
+      </div>
+
+      <div class="modal-content-col">
+        <span class="eyebrow">Limited Time Offer</span>
+        <h2 class="headline-big">10% Off<br>Entire Store</h2>
+        <p class="body-desc">Use code <strong>FIRST100</strong> for 10% off your entire order today.</p>
+
+        <!-- Coupon Box with Copy Button -->
+        <div class="coupon-box">
+          <div class="coupon-code-wrap">
+            <span class="coupon-label">Discount Code</span>
+            <span class="coupon-code" id="code-val-1">FIRST100</span>
+          </div>
+          <button class="btn-copy" id="btn-copy-1" onclick="copyCode('FIRST100', 'btn-copy-1')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span class="btn-text">Copy</span>
+          </button>
+        </div>
+
+        <span class="expire-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          Expires 8/31
+        </span>
+
+        <a href="#shop" class="btn-cta" onclick="handleShopClick(event)">Shop Collection</a>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         OPTION 2: ARCH & GLOW (Centered Minimalist)
+         ========================================== -->
+    <div class="modal-card" id="option-2">
+      <button class="btn-close" onclick="closeModal()" aria-label="Close popup modal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div class="arch-image-wrap">
+        <img src="./assets/popup-promo-candle.png" alt="Serenity Saffron Grove Candle">
+      </div>
+
+      <span class="eyebrow">Special Welcome</span>
+      <h2 class="headline-big">10% Off Storewide</h2>
+      <p class="body-desc" style="margin-bottom: 6px;">Handcrafted luxury scents for your space. Use your special gift at checkout.</p>
+
+      <!-- Coupon Box -->
+      <div class="coupon-box">
+        <div class="coupon-code-wrap">
+          <span class="coupon-label">Promo Code</span>
+          <span class="coupon-code" id="code-val-2">FIRST100</span>
+        </div>
+        <button class="btn-copy" id="btn-copy-2" onclick="copyCode('FIRST100', 'btn-copy-2')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span class="btn-text">Copy</span>
+        </button>
+      </div>
+
+      <span class="expire-tag">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        Expires 8/31
+      </span>
+
+      <a href="#shop" class="btn-cta" onclick="handleShopClick(event)">Claim 10% Off Now</a>
+    </div>
+
+    <!-- ==========================================
+         OPTION 3: MODERN LUXE (Compact Sophisticated)
+         ========================================== -->
+    <div class="modal-card" id="option-3">
+      <button class="btn-close" onclick="closeModal()" aria-label="Close popup modal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div class="modal-image-col">
+        <span class="brand-badge-overlay">Serenity Haus</span>
+        <img class="modal-image" src="./assets/popup-promo-candle.png" alt="Serenity Saffron Grove Candle">
+      </div>
+
+      <div class="modal-content-col">
+        <span class="pill-discount">Limited Promotion</span>
+        <h2 class="headline-big">10% OFF</h2>
+        <p class="body-desc">Treat your home to artisanal aromas. Apply code at checkout for 10% off.</p>
+
+        <!-- Coupon Box -->
+        <div class="coupon-box">
+          <div class="coupon-code-wrap">
+            <span class="coupon-label">Coupon Code</span>
+            <span class="coupon-code" id="code-val-3">FIRST100</span>
+          </div>
+          <button class="btn-copy" id="btn-copy-3" onclick="copyCode('FIRST100', 'btn-copy-3')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span class="btn-text">Copy</span>
+          </button>
+        </div>
+
+        <span class="expire-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          Expires 8/31
+        </span>
+
+        <a href="#shop" class="btn-cta" onclick="handleShopClick(event)">Shop With Code</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span>Discount code <strong>FIRST100</strong> copied to clipboard!</span>
+  </div>
+
+  <!-- Interactive JavaScript -->
+  <script>
+    let currentOption = 1;
+
+    function switchOption(num) {
+      currentOption = num;
+      document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+        btn.classList.toggle('active', index === num - 1);
+      });
+
+      document.querySelectorAll('.modal-card').forEach((card) => {
+        card.classList.remove('is-active');
+      });
+      const activeCard = document.getElementById('option-' + num);
+      if (activeCard) {
+        activeCard.classList.add('is-active');
+      }
+
+      openModal();
+    }
+
+    function openModal() {
+      const backdrop = document.getElementById('modalBackdrop');
+      backdrop.classList.remove('is-hidden');
+    }
+
+    function closeModal() {
+      const backdrop = document.getElementById('modalBackdrop');
+      backdrop.classList.add('is-hidden');
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target.id === 'modalBackdrop') {
+        closeModal();
+      }
+    }
+
+    async function copyCode(code, btnId) {
+      try {
+        await navigator.clipboard.writeText(code);
+      } catch (err) {
+        const tempInput = document.createElement('input');
+        tempInput.value = code;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+      }
+
+      const btn = document.getElementById(btnId);
+      if (btn) {
+        const originalHtml = btn.innerHTML;
+        btn.classList.add('copied');
+        btn.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span class="btn-text">Copied!</span>
+        `;
+
+        showToast();
+
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = originalHtml;
+        }, 2500);
+      }
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('is-show');
+      setTimeout(() => {
+        toast.classList.remove('is-show');
+      }, 3000);
+    }
+
+    function handleShopClick(e) {
+      e.preventDefault();
+      copyCode('FIRST100', 'btn-copy-' + currentOption);
+      setTimeout(() => {
+        alert('🎉 Discount code FIRST100 copied! Redirecting to the collection...');
+        closeModal();
+      }, 500);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>

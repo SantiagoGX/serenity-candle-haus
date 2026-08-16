@@ -12,7 +12,7 @@
     "main": {
       "type": "main-product",
       "settings": {
-        "show_subtitle": true,
+        "show_subtitle": false,
         "subtitle": "",
         "show_delivery_date": false,
         "delivery_min_days": 3,
@@ -23,9 +23,8 @@
         "add_to_cart_text": "ADD TO CART",
         "show_accordions": true,
         "details_title": "Details",
-        "details_content": "<p>184 mL </p><p>natural reeds</p><p>lasts up to 2 -4 months</p><p>non toxic. no alcohol. </p>",
-        "ingredients_title": "Ingredients",
-        "ingredients_content": "<p>eco base, fragrance oil</p>"
+        "details_content": "<p>soy coconut blend wax</p><p>burn time is 30 hours. </p><p>8.5oz / 240g.</p><p>phthalate free.</p><p>cruelty free.</p>",
+        "ingredients_title": "Ingredients"
       }
     },
     "testimonials_masonry_UJzxJn": {

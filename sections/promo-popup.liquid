@@ -1,0 +1,966 @@
+{% comment %}
+  =============================================================================
+  Serenity Candle Haus — Promotional Pop-up Section (Editorial Split)
+  =============================================================================
+  - Layout: 2-column luxury editorial split (Desktop) & responsive full-frame (Mobile)
+  - Interactive click-to-copy button with visual confirmation & Clipboard API
+  - Configurable display delay timer
+  - Optional Countdown Timer for exclusive drops & product launches
+  - Cookie/localStorage persistence & Theme Editor Test Mode
+  - 100% editable in Shopify Visual Edits (Theme Customizer)
+{% endcomment %}
+
+{%- if section.settings.enabled -%}
+<div 
+  id="SerenityPopup-{{ section.id }}" 
+  class="serenity-popup" 
+  data-section-id="{{ section.id }}"
+  data-delay="{{ section.settings.delay_seconds }}"
+  data-reappear-days="{{ section.settings.reappear_days }}"
+  data-test-mode="{{ section.settings.test_mode }}"
+  data-enable-timer="{{ section.settings.enable_timer }}"
+  data-target-date="{{ section.settings.timer_target_date }}"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="PopupHeading-{{ section.id }}"
+>
+  <!-- Blurred Backdrop -->
+  <div class="serenity-popup__backdrop" data-popup-close></div>
+
+  <!-- Modal Card -->
+  <div class="serenity-popup__card" role="document">
+    <!-- Close Button (X) -->
+    <button type="button" class="serenity-popup__close" data-popup-close aria-label="Close popup modal">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Left Column: Editorial Image -->
+    <div class="serenity-popup__image-col">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1000 | image_tag: 
+          loading: 'lazy', 
+          class: 'serenity-popup__image', 
+          alt: section.settings.heading | escape 
+        }}
+      {%- else -%}
+        <img 
+          src="{{ 'popup-promo-candle.png' | asset_url }}" 
+          alt="Serenity Candle" 
+          class="serenity-popup__image"
+          loading="lazy"
+          onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=80';"
+        >
+      {%- endif -%}
+      <div class="serenity-popup__image-overlay"></div>
+    </div>
+
+    <!-- Right Column: Content & Actions -->
+    <div class="serenity-popup__content-col">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="serenity-popup__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 id="PopupHeading-{{ section.id }}" class="serenity-popup__heading">
+          {{ section.settings.heading | newline_to_br }}
+        </h2>
+      {%- endif -%}
+
+      {%- if section.settings.description != blank -%}
+        <div class="serenity-popup__desc">
+          {{ section.settings.description }}
+        </div>
+      {%- endif -%}
+
+      {%- comment %} Optional Countdown Timer {% endcomment -%}
+      {%- if section.settings.enable_timer and section.settings.timer_target_date != blank -%}
+        <div class="serenity-popup__timer-wrap" id="PopupTimer-{{ section.id }}">
+          {%- if section.settings.timer_heading != blank -%}
+            <span class="serenity-popup__timer-title">{{ section.settings.timer_heading }}</span>
+          {%- endif -%}
+          <div class="serenity-popup__countdown">
+            <div class="serenity-popup__time-unit">
+              <span class="serenity-popup__time-num" data-timer-days>00</span>
+              <span class="serenity-popup__time-label">Days</span>
+            </div>
+            <span class="serenity-popup__time-sep">:</span>
+            <div class="serenity-popup__time-unit">
+              <span class="serenity-popup__time-num" data-timer-hours>00</span>
+              <span class="serenity-popup__time-label">Hrs</span>
+            </div>
+            <span class="serenity-popup__time-sep">:</span>
+            <div class="serenity-popup__time-unit">
+              <span class="serenity-popup__time-num" data-timer-minutes>00</span>
+              <span class="serenity-popup__time-label">Min</span>
+            </div>
+            <span class="serenity-popup__time-sep">:</span>
+            <div class="serenity-popup__time-unit">
+              <span class="serenity-popup__time-num" data-timer-seconds>00</span>
+              <span class="serenity-popup__time-label">Sec</span>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment %} Interactive Coupon Box with Click to Copy {% endcomment -%}
+      {%- if section.settings.coupon_code != blank -%}
+        <div class="serenity-popup__coupon-box">
+          <div class="serenity-popup__coupon-info">
+            {%- if section.settings.coupon_label != blank -%}
+              <span class="serenity-popup__coupon-label">{{ section.settings.coupon_label }}</span>
+            {%- endif -%}
+            <span class="serenity-popup__coupon-code" data-coupon-code="{{ section.settings.coupon_code }}">
+              {{ section.settings.coupon_code }}
+            </span>
+          </div>
+
+          <button 
+            type="button" 
+            class="serenity-popup__btn-copy" 
+            data-copy-btn 
+            data-code="{{ section.settings.coupon_code }}"
+            data-copy-text="{{ section.settings.copy_button_text | default: 'Copy' }}"
+            data-copied-text="{{ section.settings.copied_button_text | default: 'Copied!' }}"
+            aria-label="Copy discount code"
+          >
+            <svg class="serenity-popup__icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <svg class="serenity-popup__icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span class="serenity-popup__btn-copy-label">{{ section.settings.copy_button_text | default: 'Copy' }}</span>
+          </button>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.expiration_text != blank -%}
+        <div class="serenity-popup__expire-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>{{ section.settings.expiration_text }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.button_text != blank -%}
+        <a 
+          href="{{ section.settings.button_link | default: '/collections/all' }}" 
+          class="serenity-popup__btn-cta"
+          data-cta-link
+        >
+          {{ section.settings.button_text }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="serenity-popup__toast" data-popup-toast aria-live="polite">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span>{{ section.settings.copied_button_text | default: 'Copied!' }} — <strong>{{ section.settings.coupon_code }}</strong></span>
+  </div>
+</div>
+
+<style>
+  /* =========================================================
+     SERENITY PROMO POP-UP STYLES
+     ========================================================= */
+  .serenity-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .serenity-popup.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .serenity-popup__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    cursor: pointer;
+  }
+
+  .serenity-popup__card {
+    position: relative;
+    z-index: 2;
+    background: var(--color-bg, #FFFFFF);
+    max-width: 840px;
+    width: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.5), 0 0 1px 1px rgba(255, 255, 255, 0.1);
+    transform: scale(0.93) translateY(18px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .serenity-popup.is-open .serenity-popup__card {
+    transform: scale(1) translateY(0);
+  }
+
+  /* Close Button (X) */
+  .serenity-popup__close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    color: #111111;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .serenity-popup__close:hover {
+    background: #111111;
+    color: #FFFFFF;
+    transform: rotate(90deg) scale(1.05);
+  }
+
+  /* Image Column */
+  .serenity-popup__image-col {
+    width: 48%;
+    position: relative;
+    background: #191412;
+    min-height: 480px;
+    overflow: hidden;
+  }
+
+  .serenity-popup__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    display: block;
+    transition: transform 0.8s ease;
+  }
+
+  .serenity-popup__image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, transparent 40%, rgba(0,0,0,0.2) 100%);
+    pointer-events: none;
+  }
+
+  .serenity-popup__card:hover .serenity-popup__image {
+    transform: scale(1.03);
+  }
+
+  /* Content Column */
+  .serenity-popup__content-col {
+    width: 52%;
+    padding: 44px 38px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    background: #FFFFFF;
+  }
+
+  .serenity-popup__eyebrow {
+    font-family: var(--font-helixa, sans-serif);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-accent-solid, #B125D9);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* Letter-spacing override */
+  .serenity-popup__heading {
+    font-family: var(--font-helvetica-world, 'Helvetica World', Arial, sans-serif) !important;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.08 !important;
+    letter-spacing: -0.8px !important;
+    text-transform: uppercase;
+    color: var(--color-fg, #111111);
+    margin-bottom: 10px;
+  }
+
+  .serenity-popup__desc {
+    font-family: var(--font-helixa, sans-serif);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-fg-muted, #6B6B6B);
+    margin-bottom: 2px;
+  }
+
+  .serenity-popup__desc p {
+    margin: 0;
+  }
+
+  /* Countdown Timer */
+  .serenity-popup__timer-wrap {
+    margin: 12px 0;
+    background: #FAFAFA;
+    border: 1px solid var(--color-border, #E5E5E5);
+    border-radius: 12px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+
+  .serenity-popup__timer-title {
+    display: block;
+    font-family: var(--font-helixa, sans-serif);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-fg-muted, #6B6B6B);
+    margin-bottom: 6px;
+  }
+
+  .serenity-popup__countdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .serenity-popup__time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 36px;
+  }
+
+  .serenity-popup__time-num {
+    font-family: var(--font-helvetica-world, sans-serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-fg, #111111);
+    line-height: 1;
+  }
+
+  .serenity-popup__time-label {
+    font-size: 9px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-fg-muted, #6B6B6B);
+    margin-top: 2px;
+  }
+
+  .serenity-popup__time-sep {
+    font-family: var(--font-helvetica-world, sans-serif);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-accent-solid, #B125D9);
+    margin-top: -8px;
+  }
+
+  /* Coupon Box */
+  .serenity-popup__coupon-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FAF7FB;
+    border: 1.5px dashed var(--color-accent-a30, rgba(203, 108, 230, 0.3));
+    border-radius: 14px;
+    padding: 10px 14px;
+    margin: 14px 0;
+    transition: all 0.25s ease;
+  }
+
+  .serenity-popup__coupon-box:hover {
+    border-color: var(--color-accent-solid, #B125D9);
+    background: rgba(203, 108, 230, 0.1);
+  }
+
+  .serenity-popup__coupon-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .serenity-popup__coupon-label {
+    font-family: var(--font-helixa, sans-serif);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-fg-muted, #6B6B6B);
+    margin-bottom: 2px;
+  }
+
+  .serenity-popup__coupon-code {
+    font-family: var(--font-helvetica-world, sans-serif);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--color-fg, #111111);
+  }
+
+  .serenity-popup__btn-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #111111;
+    color: #FFFFFF;
+    border: none;
+    padding: 9px 15px;
+    border-radius: 9px;
+    font-family: var(--font-helixa, sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .serenity-popup__btn-copy:hover {
+    background: var(--color-accent-solid, #B125D9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(177, 37, 217, 0.3);
+  }
+
+  .serenity-popup__icon-check {
+    display: none;
+  }
+
+  .serenity-popup__btn-copy.copied {
+    background: #10B981 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35) !important;
+  }
+
+  .serenity-popup__btn-copy.copied .serenity-popup__icon-copy {
+    display: none;
+  }
+
+  .serenity-popup__btn-copy.copied .serenity-popup__icon-check {
+    display: inline-block;
+  }
+
+  /* Expiration Tag */
+  .serenity-popup__expire-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-helixa, sans-serif);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-fg-muted, #6B6B6B);
+    margin-bottom: 14px;
+  }
+
+  /* CTA Button */
+  .serenity-popup__btn-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 16px 28px;
+    background: var(--color-accent-solid, #B125D9);
+    color: #FFFFFF;
+    font-family: var(--font-helvetica-world, sans-serif);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-radius: var(--btn-cta-radius, 1000px);
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 18px rgba(177, 37, 217, 0.28);
+    text-align: center;
+  }
+
+  .serenity-popup__btn-cta:hover {
+    background: var(--color-accent-hover, #BC41DF);
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(177, 37, 217, 0.42);
+  }
+
+  /* Toast Notification */
+  .serenity-popup__toast {
+    position: fixed;
+    bottom: 30px;
+    background: #111111;
+    color: #FFFFFF;
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-family: var(--font-helixa, sans-serif);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100000;
+    pointer-events: none;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .serenity-popup__toast.is-show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* =========================================================
+     RESPONSIVE MOBILE OPTIMIZATIONS (Pixel-Perfect)
+     ========================================================= */
+  @media (max-width: 768px) {
+    .serenity-popup {
+      padding: 16px;
+      align-items: center;
+    }
+
+    .serenity-popup__card {
+      flex-direction: column;
+      max-width: 390px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      border-radius: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+      margin: 0 auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Extended image height on mobile */
+    .serenity-popup__image-col {
+      width: 100%;
+      min-height: 280px;
+      height: 280px;
+      flex-shrink: 0;
+    }
+
+    .serenity-popup__image {
+      object-position: center 40%;
+    }
+
+    /* Floating Close Button with frosted glass */
+    .serenity-popup__close {
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Content Area */
+    .serenity-popup__content-col {
+      width: 100%;
+      padding: 22px 20px 24px;
+    }
+
+    .serenity-popup__eyebrow {
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      margin-bottom: 6px;
+    }
+
+    .serenity-popup__heading {
+      font-size: 25px !important;
+      line-height: 1.15 !important;
+      letter-spacing: -0.4px !important;
+      margin-bottom: 6px;
+    }
+
+    .serenity-popup__desc {
+      font-size: 13px;
+      line-height: 1.45;
+      color: #6B6B6B;
+      margin-bottom: 2px;
+    }
+
+    /* Mobile Coupon Box */
+    .serenity-popup__coupon-box {
+      padding: 9px 12px;
+      margin: 12px 0 10px;
+      border-radius: 12px;
+    }
+
+    .serenity-popup__coupon-label {
+      font-size: 9px;
+      letter-spacing: 1px;
+    }
+
+    .serenity-popup__coupon-code {
+      font-size: 17px;
+      letter-spacing: 1.5px;
+    }
+
+    .serenity-popup__btn-copy {
+      padding: 8px 13px;
+      font-size: 11px;
+      border-radius: 8px;
+      gap: 5px;
+    }
+
+    .serenity-popup__expire-tag {
+      font-size: 11px;
+      margin-bottom: 12px;
+      gap: 5px;
+    }
+
+    .serenity-popup__btn-cta {
+      padding: 14px 20px;
+      font-size: 12px;
+      letter-spacing: 1.2px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const popup = document.getElementById('SerenityPopup-{{ section.id }}');
+    if (!popup) return;
+
+    const delay = parseInt(popup.getAttribute('data-delay') || '5', 10) * 1000;
+    const reappearDays = parseInt(popup.getAttribute('data-reappear-days') || '7', 10);
+    const isTestMode = popup.getAttribute('data-test-mode') === 'true';
+    const enableTimer = popup.getAttribute('data-enable-timer') === 'true';
+    const targetDateStr = popup.getAttribute('data-target-date');
+    const storageKey = 'serenity_popup_dismissed_{{ section.id }}';
+
+    // Check storage persistence
+    function shouldShowPopup() {
+      if (isTestMode) return true;
+      try {
+        const dismissedAt = localStorage.getItem(storageKey);
+        if (!dismissedAt) return true;
+        const daysPassed = (Date.now() - parseInt(dismissedAt, 10)) / (1000 * 60 * 60 * 24);
+        return daysPassed >= reappearDays;
+      } catch (e) {
+        return true;
+      }
+    }
+
+    function openPopup() {
+      popup.classList.add('is-open');
+      popup.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePopup() {
+      popup.classList.remove('is-open');
+      popup.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      try {
+        localStorage.setItem(storageKey, Date.now().toString());
+      } catch(e) {}
+    }
+
+    // Trigger after delay
+    if (shouldShowPopup()) {
+      setTimeout(openPopup, delay);
+    }
+
+    // Listen to close triggers
+    popup.querySelectorAll('[data-popup-close]').forEach(function(el) {
+      el.addEventListener('click', closePopup);
+    });
+
+    // Escape key listener
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && popup.classList.contains('is-open')) {
+        closePopup();
+      }
+    });
+
+    // Copy Button Handler
+    const copyBtn = popup.querySelector('[data-copy-btn]');
+    const toast = popup.querySelector('[data-popup-toast]');
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async function() {
+        const code = copyBtn.getAttribute('data-code');
+        const copiedText = copyBtn.getAttribute('data-copied-text') || 'Copied!';
+        const originalText = copyBtn.getAttribute('data-copy-text') || 'Copy';
+        const labelSpan = copyBtn.querySelector('.serenity-popup__btn-copy-label');
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(code);
+          } else {
+            const temp = document.createElement('input');
+            temp.value = code;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+          }
+        } catch(err) {
+          const temp = document.createElement('input');
+          temp.value = code;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+        }
+
+        // Visual feedback
+        copyBtn.classList.add('copied');
+        if (labelSpan) labelSpan.textContent = copiedText;
+
+        // Show Toast Notification
+        if (toast) {
+          toast.classList.add('is-show');
+          setTimeout(function() {
+            toast.classList.remove('is-show');
+          }, 3000);
+        }
+
+        setTimeout(function() {
+          copyBtn.classList.remove('copied');
+          if (labelSpan) labelSpan.textContent = originalText;
+        }, 2500);
+      });
+    }
+
+    // Countdown Timer Logic
+    if (enableTimer && targetDateStr) {
+      const targetTime = new Date(targetDateStr).getTime();
+      const daysEl = popup.querySelector('[data-timer-days]');
+      const hoursEl = popup.querySelector('[data-timer-hours]');
+      const minsEl = popup.querySelector('[data-timer-minutes]');
+      const secsEl = popup.querySelector('[data-timer-seconds]');
+
+      if (!isNaN(targetTime) && daysEl && hoursEl && minsEl && secsEl) {
+        function updateTimer() {
+          const now = Date.now();
+          const diff = targetTime - now;
+
+          if (diff <= 0) {
+            daysEl.textContent = '00';
+            hoursEl.textContent = '00';
+            minsEl.textContent = '00';
+            secsEl.textContent = '00';
+            return;
+          }
+
+          const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+          daysEl.textContent = d < 10 ? '0' + d : d;
+          hoursEl.textContent = h < 10 ? '0' + h : h;
+          minsEl.textContent = m < 10 ? '0' + m : m;
+          secsEl.textContent = s < 10 ? '0' + s : s;
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+      }
+    }
+
+    // Theme Editor Live Selection Events
+    if (window.Shopify && Shopify.designMode) {
+      document.addEventListener('shopify:section:select', function(e) {
+        if (e.detail && e.detail.sectionId === '{{ section.id }}') {
+          openPopup();
+        }
+      });
+      document.addEventListener('shopify:section:deselect', function(e) {
+        if (e.detail && e.detail.sectionId === '{{ section.id }}') {
+          closePopup();
+        }
+      });
+    }
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Promotional Pop-up",
+  "tag": "section",
+  "class": "section-promo-popup",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General Settings & Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable Promotional Pop-up",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "test_mode",
+      "label": "Test Mode (Always show)",
+      "info": "When enabled, ignores browser storage so you can always preview the popup while editing.",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "delay_seconds",
+      "label": "Display Delay",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "reappear_days",
+      "label": "Days to reappear after closing",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "d",
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "Editorial Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Promo / Candle Image",
+      "info": "Upload any custom photo here. Vertical high-resolution image recommended (4:5 or 3:4 ratio)."
+    },
+    {
+      "type": "header",
+      "content": "Text Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow / Subtitle",
+      "default": "Limited Time Offer"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Main Heading",
+      "default": "10% OFF\nENTIRE STORE"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description Text",
+      "default": "Use code FIRST100 for 10% off your entire order today."
+    },
+    {
+      "type": "header",
+      "content": "Discount Coupon & Copy Button"
+    },
+    {
+      "type": "text",
+      "id": "coupon_label",
+      "label": "Coupon Label",
+      "default": "Discount Code"
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Discount Code",
+      "default": "FIRST100"
+    },
+    {
+      "type": "text",
+      "id": "copy_button_text",
+      "label": "Copy Button Text",
+      "default": "Copy"
+    },
+    {
+      "type": "text",
+      "id": "copied_button_text",
+      "label": "Copied Confirmation Text",
+      "default": "Copied!"
+    },
+    {
+      "type": "text",
+      "id": "expiration_text",
+      "label": "Expiration / Date Text",
+      "default": "Expires 8/31"
+    },
+    {
+      "type": "header",
+      "content": "Call To Action Button (CTA)"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop Collection"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Optional Countdown Timer"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_timer",
+      "label": "Enable Countdown Timer",
+      "info": "Useful for special drops, product launches, or limited-time sale deadlines.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "timer_heading",
+      "label": "Timer Heading",
+      "default": "Drop ends in:"
+    },
+    {
+      "type": "text",
+      "id": "timer_target_date",
+      "label": "Target Date & Time",
+      "info": "Format: YYYY-MM-DDTHH:MM:SS (e.g. 2026-08-31T23:59:59)",
+      "default": "2026-08-31T23:59:59"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promotional Pop-up"
+    }
+  ]
+}
+{% endschema %}
